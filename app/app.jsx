@@ -16,7 +16,6 @@ $(document).foundation();
 
 const store = redux.createStore(reducers, {}, 
         redux.compose(redux.applyMiddleware(thunk), window.devToolsExtension()));
-store.dispatch(startGetAllDevices());
 
 ReactDOM.render(
     <Provider store={store}>

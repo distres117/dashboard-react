@@ -27,8 +27,8 @@ module.exports = {
             host:'localhost',
             port: 3000,
             server: { 
-                baseDir:[__dirname + '/public']
-            }
+                baseDir:[__dirname]
+            },
         })
     ],
     output: {
