@@ -5,9 +5,6 @@ import Common from 'common';
 import {startGetAllDevices} from 'actions';
 class Main extends Component {
 
-    componentDidMount(){
-        this.props.dispatch(startGetAllDevices());
-    }
     render() {
         let devices = this.props.devices.map(d=>{
             return (<DevicePanel key={d.id} {...d}></DevicePanel>)

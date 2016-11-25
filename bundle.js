@@ -139,6 +139,7 @@
 	$(document).foundation();
 
 	var store = redux.createStore(_reducers.reducers, {}, redux.compose(redux.applyMiddleware(_reduxThunk2.default), window.devToolsExtension()));
+	store.dispatch((0, _actions.startGetAllDevices)());
 
 	_reactDom2.default.render(_react2.default.createElement(
 	    _reactRedux.Provider,
@@ -21652,11 +21653,6 @@
 	    }
 
 	    _createClass(Main, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.props.dispatch((0, _actions.startGetAllDevices)());
-	        }
-	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var devices = this.props.devices.map(function (d) {
@@ -29537,7 +29533,7 @@
 
 
 	// module
-	exports.push([module.id, ".sidebar {\n  background: #2A3F54;\n  top: 0;\n  left: 0;\n  width: 20%;\n  height: 100%;\n  padding: 20px;\n  color: white;\n  position: fixed; }\n  .sidebar ul {\n    list-style-type: none; }\n  .sidebar a {\n    padding: 8px 8px 8px 32px;\n    text-decoration: none;\n    font-size: 1em;\n    color: #818181;\n    display: block; }\n  .sidebar a:hover {\n    background: aliceblue; }\n\n.summary-pane {\n  height: 120px;\n  margin-bottom: 20px;\n  padding-top: 20px;\n  width: 80%;\n  position: fixed;\n  left: 20%;\n  display: flex;\n  justify-content: space-around;\n  background: white;\n  z-index: 100; }\n\n.summary-panel {\n  border-left: solid black 1px;\n  margin-bottom: 20px; }\n\n.device-view {\n  display: flex;\n  position: relative;\n  left: 22%;\n  padding-left: 30px;\n  top: 150px;\n  width: 80%;\n  flex-flow: wrap;\n  align-content: center; }\n\n.device-panel {\n  border: solid grey 1px;\n  margin: 15px;\n  margin-left: 30px;\n  width: 275px;\n  height: 200px;\n  border-radius: 5%;\n  padding: 5px;\n  box-shadow: 5px 5px lightgray; }\n\n.details-view {\n  position: relative;\n  left: 22%;\n  top: 150px; }\n\nhtml, body {\n  height: 100%; }\n", ""]);
+	exports.push([module.id, ".sidebar {\n  background: #2A3F54;\n  top: 0;\n  left: 0;\n  width: 20%;\n  height: 100%;\n  padding: 20px;\n  color: white;\n  position: fixed; }\n  .sidebar ul {\n    list-style-type: none; }\n  .sidebar a {\n    padding: 8px 8px 8px 32px;\n    text-decoration: none;\n    font-size: 1em;\n    color: #818181;\n    display: block; }\n  .sidebar a:hover {\n    background: aliceblue; }\n\n.summary-pane {\n  height: 120px;\n  margin-bottom: 20px;\n  padding-top: 20px;\n  width: 80%;\n  position: fixed;\n  left: 20%;\n  display: flex;\n  justify-content: space-around;\n  background: white;\n  z-index: 100; }\n\n.summary-panel {\n  border-left: solid black 1px;\n  margin-bottom: 20px; }\n\n.device-view {\n  display: flex;\n  position: relative;\n  left: 22%;\n  padding-left: 30px;\n  top: 150px;\n  width: 80%;\n  flex-flow: wrap;\n  align-content: center; }\n\n.device-panel {\n  border: solid grey 1px;\n  margin: 15px;\n  margin-left: 30px;\n  width: 275px;\n  height: 200px;\n  padding: 5px;\n  box-shadow: 2px 2px lightgray; }\n\n.details-view {\n  position: relative;\n  left: 22%;\n  top: 150px; }\n\nhtml, body {\n  height: 100%; }\n", ""]);
 
 	// exports
 
