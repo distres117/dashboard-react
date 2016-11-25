@@ -1,26 +1,30 @@
-import {ADD_DEVICE, REMOVE_DEVICE, ADD_READING} from 'actionTypes';
+import {ADD_DEVICE, ADD_DEVICES, REMOVE_DEVICE, ADD_READING, ADD_READINGS} from 'actionTypes';
 import {combineReducers} from 'redux';
 
-const deviceReducer = (state=[], action)=>{
+export const deviceReducer = (state=[], action)=>{
     switch (action.type){
         case ADD_DEVICE:
             return [...state, action.payload];
+        case ADD_DEVICES:
+            return [...state, ...action.payload];
         case REMOVE_DEVICE:
-            return state.filter(d=>d !== action.payload);
+            return state.filter(d=>d.id !== action.payload);
         default:
             return state;
     }
 }
 
-const readingsReducer = (state=[], action)=>{
+export const readingsReducer = (state=[], action)=>{
     switch(action.type){
         case ADD_READING:
-            return [...state, action.payload];
+            return [...state, action.payload.reading];
+        case ADD_READINGS:
+            return [...state, ...action.payload.readings ];
         default:
             return state;
     }
 }
 export const reducers = combineReducers({
     devices: deviceReducer,
-    readings:readingReducer
+    readings:readingsReducer
 });

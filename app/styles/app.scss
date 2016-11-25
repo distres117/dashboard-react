@@ -1,0 +1,9 @@
+@import 'components/sidebar';
+@import 'components/summaryPane';
+@import 'components/summaryPanel';
+@import 'components/main';
+@import 'components/devicePanel';
+@import 'components/details';
+html,body{
+    height:100%;
+}

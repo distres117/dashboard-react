@@ -7,6 +7,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
     entry: [
         'script!jquery/dist/jquery.min.js',
+        'script!foundation-sites/dist/foundation.min.js',
         './app/app.jsx'
         ],
     externals:{
@@ -17,16 +18,17 @@ module.exports = {
             '$':'jquery',
             'jQuery':'jquery'
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compressor:{
-                warnings: false
-            }
-        }),
+        // new webpack.optimize.UglifyJsPlugin({
+        //     compressor:{
+        //         warnings: false
+        //     }
+        // }),
         new BrowserSync({
             host:'localhost',
             port: 3000,
-            server: { baseDir:[__dirname + '\\public']},
-            browser: 'chrome'
+            server: { 
+                baseDir:[__dirname + '/public']
+            }
         })
     ],
     output: {
@@ -41,6 +43,9 @@ module.exports = {
             './app/models',
             './app/state'
         ],
+        alias:{
+            applicationStyles: 'app/styles/app.scss'
+        },
         
         extensions: ['', '.js', '.jsx']
     },
@@ -56,4 +61,7 @@ module.exports = {
             }
         ]
     }
+    // sassLoader:{
+    //     includePaths: [path.resolve(__dirname, './node_modules/foundation-sites/scss')]
+    // },
 }

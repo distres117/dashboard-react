@@ -1,0 +1,12 @@
+.summary-pane{
+    height: 120px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    width: 80%;
+    position: fixed;
+    left: 20%;
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    z-index: 100;
+}

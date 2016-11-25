@@ -64,16 +64,33 @@ export const startGetReadings = (deviceId)=>{
     return (dispatch, getState)=>{
         return client.get(`/devices/${deviceId}/readings`)
         .then(res=>{
-            dispatch(addReading(deviceId, res.data));
+            dispatch(addReadings(deviceId, res.data));
         })
     }
 }
 
-export const addReading = (deviceId, readings)=>{
+export const startAddReading = (deviceId, reading)=>{
+    return (dispatch, getState)=>{
+        return client.post('/readings', reading)
+        .then(res=>{
+            dispatch(addReading(deviceId, res.data));
+        })
+    }
+}
+export const addReading = (deviceId, reading)=>{
+    return {
+        type: ADD_READING,
+        payload: {
+            deviceId, reading
+        }
+    }
+}
+
+export const addReadings = (deviceId, readings)=>{
     return {
         type: ADD_READING,
         payload:{
-            device: deviceId,
+            deviceId,
             readings
         }
     }
