@@ -1,9 +1,32 @@
 .device-panel{
-    border: solid grey 1px;
     margin:15px;
     margin-left:30px;
     width: 275px;
-    height:200px;
-    padding: 5px;
+    min-height:200px;
+    padding-top: 10px;
+    padding: 10px;
     box-shadow: 2px 2px lightgray;
+    background: white;
+}
+
+.device-panel-contents{
+    color: grey;
+    line-height: 10px;
+    .device-panel-header{
+        h6{
+            padding-top:10px;
+            padding-left:5px;
+            line-height: 10px;
+            display: inline-block;
+        }
+        span{
+            float: right;
+        }
+    }
+    .device-panel-value{
+        text-align: center;
+        padding-top:10px;
+        background: #F7F7F7;
+        
+    }
 }

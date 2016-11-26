@@ -6,9 +6,9 @@ class SummaryPane extends Component{
     render(){
         return (
         <div className='summary-pane'>
-            <SummaryPanel/>
-            <SummaryPanel/>
-            <SummaryPanel/>
+            <SummaryPanel type='temperature' title='Avg. Temperature'/>
+            <SummaryPanel type='humidity' title='Avg. Humidity'/>
+            <SummaryPanel type='airquality' title='Avg. Air Quality'/>
         </div>
         )
     }

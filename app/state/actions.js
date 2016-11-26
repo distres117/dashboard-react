@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {ADD_DEVICE, ADD_DEVICES, REMOVE_DEVICE, ADD_READING, ADD_READINGS} from 'actionTypes';
 
-const client = axios.create({baseURL: 'https://fullstack-challenge-api.herokuapp.com'})
+const client = axios.create({baseURL: 'http://cors-anywhere.herokuapp.com/https://fullstack-challenge-api.herokuapp.com'})
 
 //******************************** DEVICE ACTIONS *************************************
 export const startGetAllDevices = () =>{

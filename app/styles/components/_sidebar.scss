@@ -11,11 +11,12 @@
         list-style-type: none;
     }
     a{
-        padding: 8px 8px 8px 32px;
+        padding-left:5px;
+        padding-bottom: 20px;
         text-decoration: none;
         font-size: 1em;
         color: #818181;
-        display: block;
+        display: inline-block;
     }
     a:hover{
         background: aliceblue;
