@@ -14,15 +14,16 @@ class SummaryPanel extends Component {
     }
 
     renderGauge() {
-            this.gaugeRendered = true;
+            let elem = $(`#${this.props.type}`); //a hacky way of updating the gauge value...
+            if (elem.children().length)
+                elem.children()[0].remove();
             let value = this.devices.reduce((ac, d) => ac += parseInt(d.value), 0);
-            console.log(value);
             this.g = new JustGage({
             id: this.props.type,
             relativeGaugeSize: false,
             height: 120,
             width: 150,
-            value: Math.round(value / this.devices.length),
+            value: Math.round(value / this.devices.length) || 0,
             min: 0,
             max: 100,
             title: this.props.title

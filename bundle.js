@@ -29075,7 +29075,7 @@
 /* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function($) {'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -29119,17 +29119,17 @@
 	    }, {
 	        key: 'renderGauge',
 	        value: function renderGauge() {
-	            this.gaugeRendered = true;
+	            var elem = $('#' + this.props.type); //a hacky way of updating the gauge value...
+	            if (elem.children().length) elem.children()[0].remove();
 	            var value = this.devices.reduce(function (ac, d) {
 	                return ac += parseInt(d.value);
 	            }, 0);
-	            console.log(value);
 	            this.g = new JustGage({
 	                id: this.props.type,
 	                relativeGaugeSize: false,
 	                height: 120,
 	                width: 150,
-	                value: Math.round(value / this.devices.length),
+	                value: Math.round(value / this.devices.length) || 0,
 	                min: 0,
 	                max: 100,
 	                title: this.props.title
@@ -29167,6 +29167,7 @@
 	exports.default = (0, _reactRedux.connect)(function (s) {
 	    return s;
 	})(SummaryPanel);
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ },
 /* 287 */
@@ -29954,7 +29955,7 @@
 
 
 	// module
-	exports.push([module.id, ".sidebar {\n  background: #2A3F54;\n  top: 0;\n  left: 0;\n  width: 20%;\n  height: 100%;\n  padding: 20px;\n  color: white;\n  position: fixed; }\n  .sidebar ul {\n    list-style-type: none; }\n  .sidebar a {\n    padding-left: 5px;\n    padding-bottom: 20px;\n    text-decoration: none;\n    font-size: 1em;\n    color: #818181;\n    display: inline-block; }\n  .sidebar a:hover {\n    background: aliceblue; }\n\n.summary-pane {\n  height: 160px;\n  margin-bottom: 20px;\n  padding-top: 20px;\n  width: 80%;\n  position: fixed;\n  left: 20%;\n  display: flex;\n  justify-content: space-around;\n  background: white;\n  z-index: 100;\n  box-shadow: 5px 2px lightgrey;\n  overflow: hidden; }\n\n.summary-panel {\n  margin-bottom: 20px;\n  margin: 0 auto; }\n\n.device-view {\n  display: flex;\n  position: relative;\n  left: 20%;\n  padding: 30px;\n  top: 160px;\n  width: 80%;\n  flex-flow: wrap;\n  align-content: center; }\n\n.info-alert {\n  top: 160px;\n  background: #2199e8;\n  position: fixed;\n  width: 80%;\n  text-align: center;\n  color: white; }\n\n.device-panel {\n  margin: 15px;\n  margin-left: 30px;\n  width: 275px;\n  min-height: 200px;\n  padding-top: 10px;\n  padding: 10px;\n  box-shadow: 2px 2px lightgray;\n  background: white; }\n\n.device-panel-contents {\n  color: grey;\n  line-height: 10px; }\n  .device-panel-contents .device-panel-header h6 {\n    padding-top: 10px;\n    padding-left: 5px;\n    line-height: 10px;\n    display: inline-block; }\n  .device-panel-contents .device-panel-header span {\n    float: right; }\n  .device-panel-contents .device-panel-header input {\n    height: 25px; }\n  .device-panel-contents .device-panel-header .button {\n    display: inline-block;\n    float: right;\n    margin: 0px; }\n  .device-panel-contents .device-panel-value {\n    text-align: center;\n    padding-top: 10px;\n    background: #F7F7F7; }\n\n.details-view {\n  position: relative;\n  left: 22%;\n  top: 150px; }\n\nhtml, body {\n  height: 100%;\n  background: #F7F7F7; }\n\n.loader-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 500px;\n  width: 100%; }\n\n.loader {\n  border: 16px solid #f3f3f3;\n  /* Light grey */\n  border-top: 16px solid #3498db;\n  /* Blue */\n  border-radius: 50%;\n  width: 60px;\n  height: 60px;\n  animation: spin 2s linear infinite; }\n\n@keyframes spin {\n  0% {\n    transform: rotate(0deg); }\n  100% {\n    transform: rotate(360deg); } }\n", ""]);
+	exports.push([module.id, ".sidebar {\n  background: #2A3F54;\n  top: 0;\n  left: 0;\n  width: 20%;\n  height: 100%;\n  padding: 20px;\n  color: white;\n  position: fixed; }\n  .sidebar ul {\n    list-style-type: none; }\n  .sidebar a {\n    padding-left: 5px;\n    padding-bottom: 20px;\n    text-decoration: none;\n    font-size: 1em;\n    color: #818181;\n    display: inline-block; }\n  .sidebar a:hover {\n    background: aliceblue; }\n\n.summary-pane {\n  height: 160px;\n  margin-bottom: 20px;\n  padding-top: 20px;\n  width: 80%;\n  position: fixed;\n  left: 20%;\n  display: flex;\n  justify-content: space-around;\n  background: white;\n  z-index: 100;\n  box-shadow: 5px 2px lightgrey; }\n\n.summary-panel {\n  margin-bottom: 20px;\n  margin: 0 auto; }\n\n.device-view {\n  display: flex;\n  position: relative;\n  left: 20%;\n  padding: 30px;\n  top: 160px;\n  width: 80%;\n  flex-flow: wrap;\n  align-content: center; }\n\n.info-alert {\n  top: 160px;\n  background: #2199e8;\n  position: fixed;\n  width: 80%;\n  text-align: center;\n  color: white; }\n\n.device-panel {\n  margin: 15px;\n  margin-left: 30px;\n  width: 275px;\n  min-height: 200px;\n  padding-top: 10px;\n  padding: 10px;\n  box-shadow: 2px 2px lightgray;\n  background: white; }\n\n.device-panel-contents {\n  color: grey;\n  line-height: 10px; }\n  .device-panel-contents .device-panel-header h6 {\n    padding-top: 10px;\n    padding-left: 5px;\n    line-height: 10px;\n    display: inline-block; }\n  .device-panel-contents .device-panel-header span {\n    float: right; }\n  .device-panel-contents .device-panel-header input {\n    height: 25px; }\n  .device-panel-contents .device-panel-header .button {\n    display: inline-block;\n    float: right;\n    margin: 0px; }\n  .device-panel-contents .device-panel-value {\n    text-align: center;\n    padding-top: 10px;\n    background: #F7F7F7; }\n\n.details-view {\n  position: relative;\n  left: 22%;\n  top: 150px; }\n\nhtml, body {\n  height: 100%;\n  background: #F7F7F7; }\n\n.loader-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 500px;\n  width: 100%; }\n\n.loader {\n  border: 16px solid #f3f3f3;\n  /* Light grey */\n  border-top: 16px solid #3498db;\n  /* Blue */\n  border-radius: 50%;\n  width: 60px;\n  height: 60px;\n  animation: spin 2s linear infinite; }\n\n@keyframes spin {\n  0% {\n    transform: rotate(0deg); }\n  100% {\n    transform: rotate(360deg); } }\n", ""]);
 
 	// exports
 
