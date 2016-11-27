@@ -4,7 +4,7 @@ import {combineReducers} from 'redux';
 export const deviceReducer = (state=[], action)=>{
     switch (action.type){
         case ADD_DEVICE:
-            return [...state, action.payload];
+            return [action.payload, ...state];
         case ADD_DEVICES:
             return [...state, ...action.payload];
         case REMOVE_DEVICE:

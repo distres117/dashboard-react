@@ -21635,6 +21635,10 @@
 
 	var _common2 = _interopRequireDefault(_common);
 
+	var _deviceForm = __webpack_require__(306);
+
+	var _deviceForm2 = _interopRequireDefault(_deviceForm);
+
 	var _actions = __webpack_require__(263);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21653,7 +21657,15 @@
 
 	        var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this, props));
 
+	        _this.showAlert = function (msg) {
+	            _this.setState({ alerted: true, msg: msg });
+	            window.setTimeout(function () {
+	                return _this.setState({ alerted: false });
+	            }, 5000);
+	        };
+
 	        _this.loaded = _this.props.devices.length ? true : false;
+	        _this.state = { alerted: false, msg: '', color: 'green' };
 	        return _this;
 	    }
 
@@ -21670,9 +21682,11 @@
 	    }, {
 	        key: 'getDevices',
 	        value: function getDevices() {
+	            var _this2 = this;
+
 	            if (this.loaded) {
 	                return this.props.devices.map(function (d) {
-	                    return _react2.default.createElement(_devicePanel2.default, _extends({ key: d.id }, d));
+	                    return _react2.default.createElement(_devicePanel2.default, _extends({ doAlert: _this2.showAlert, key: d.id }, d));
 	                });
 	            } else {
 	                return _react2.default.createElement(
@@ -21692,6 +21706,12 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'device-view' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'info-alert', ref: 'alertBox', hidden: !this.state.alerted },
+	                        this.state.msg
+	                    ),
+	                    _react2.default.createElement(_deviceForm2.default, { doAlert: this.showAlert }),
 	                    this.getDevices()
 	                )
 	            );
@@ -21723,6 +21743,8 @@
 
 	var _reactRedux = __webpack_require__(166);
 
+	var _actions = __webpack_require__(263);
+
 	var _reactRouter = __webpack_require__(198);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -21748,16 +21770,26 @@
 	        }
 
 	        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = DevicePanel.__proto__ || Object.getPrototypeOf(DevicePanel)).call.apply(_ref, [this].concat(args))), _this), _this.deleteDevice = function () {
-	            alert('delete device!');
+	            var _this$props = _this.props,
+	                id = _this$props.id,
+	                dispatch = _this$props.dispatch,
+	                doAlert = _this$props.doAlert,
+	                name = _this$props.name;
+
+	            dispatch((0, _actions.startRemoveDevice)(id));
+	            doAlert(name + ' has been removed...');
 	        }, _temp), _possibleConstructorReturn(_this, _ret);
 	    }
 
 	    _createClass(DevicePanel, [{
 	        key: 'getValue',
 	        value: function getValue() {
-	            var value = this.props.value;
+	            var _props = this.props,
+	                value = _props.value,
+	                type = _props.type;
+
+	            var style = { color: 'orange' };
 	            if (this.props.type === 'temperature') {
-	                var style = { color: 'orange' };
 	                if (value > 90) style.color = 'red';
 	                return _react2.default.createElement(
 	                    'h1',
@@ -21765,15 +21797,21 @@
 	                    value,
 	                    '\u2109'
 	                );
+	            } else {
+	                return _react2.default.createElement(
+	                    'h1',
+	                    { style: style, className: 'device-content-value' },
+	                    value
+	                );
 	            }
 	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _props = this.props,
-	                name = _props.name,
-	                id = _props.id,
-	                type = _props.type;
+	            var _props2 = this.props,
+	                name = _props2.name,
+	                id = _props2.id,
+	                type = _props2.type;
 
 	            return _react2.default.createElement(
 	                'div',
@@ -27633,7 +27671,7 @@
 	                relativeGaugeSize: false,
 	                height: 120,
 	                width: 150,
-	                value: value / this.devices.length,
+	                value: value / this.devices.length || 0,
 	                min: 0,
 	                max: 100,
 	                title: this.props.title
@@ -27658,7 +27696,7 @@
 	                    'span',
 	                    { className: style },
 	                    this.devices.length,
-	                    'devices reporting'
+	                    ' devices reporting'
 	                ),
 	                _react2.default.createElement('div', { id: this.props.type })
 	            );
@@ -29292,7 +29330,7 @@
 
 	    switch (action.type) {
 	        case _actionTypes.ADD_DEVICE:
-	            return [].concat(_toConsumableArray(state), [action.payload]);
+	            return [action.payload].concat(_toConsumableArray(state));
 	        case _actionTypes.ADD_DEVICES:
 	            return [].concat(_toConsumableArray(state), _toConsumableArray(action.payload));
 	        case _actionTypes.REMOVE_DEVICE:
@@ -29769,7 +29807,7 @@
 
 
 	// module
-	exports.push([module.id, ".sidebar {\n  background: #2A3F54;\n  top: 0;\n  left: 0;\n  width: 20%;\n  height: 100%;\n  padding: 20px;\n  color: white;\n  position: fixed; }\n  .sidebar ul {\n    list-style-type: none; }\n  .sidebar a {\n    padding-left: 5px;\n    padding-bottom: 20px;\n    text-decoration: none;\n    font-size: 1em;\n    color: #818181;\n    display: inline-block; }\n  .sidebar a:hover {\n    background: aliceblue; }\n\n.summary-pane {\n  height: 160px;\n  margin-bottom: 20px;\n  padding-top: 20px;\n  width: 80%;\n  position: fixed;\n  left: 20%;\n  display: flex;\n  justify-content: space-around;\n  background: white;\n  z-index: 100;\n  box-shadow: 5px 2px lightgrey;\n  overflow: hidden; }\n\n.summary-panel {\n  margin-bottom: 20px;\n  margin: 0 auto; }\n\n.device-view {\n  display: flex;\n  position: relative;\n  left: 20%;\n  padding: 30px;\n  top: 160px;\n  width: 80%;\n  flex-flow: wrap;\n  align-content: center; }\n\n.device-panel {\n  margin: 15px;\n  margin-left: 30px;\n  width: 275px;\n  min-height: 200px;\n  padding-top: 10px;\n  padding: 10px;\n  box-shadow: 2px 2px lightgray;\n  background: white; }\n\n.device-panel-contents {\n  color: grey;\n  line-height: 10px; }\n  .device-panel-contents .device-panel-header h6 {\n    padding-top: 10px;\n    padding-left: 5px;\n    line-height: 10px;\n    display: inline-block; }\n  .device-panel-contents .device-panel-header span {\n    float: right; }\n  .device-panel-contents .device-panel-value {\n    text-align: center;\n    padding-top: 10px;\n    background: #F7F7F7; }\n\n.details-view {\n  position: relative;\n  left: 22%;\n  top: 150px; }\n\nhtml, body {\n  height: 100%;\n  background: #F7F7F7; }\n\n.loader-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 500px;\n  width: 100%; }\n\n.loader {\n  border: 16px solid #f3f3f3;\n  /* Light grey */\n  border-top: 16px solid #3498db;\n  /* Blue */\n  border-radius: 50%;\n  width: 60px;\n  height: 60px;\n  animation: spin 2s linear infinite; }\n\n@keyframes spin {\n  0% {\n    transform: rotate(0deg); }\n  100% {\n    transform: rotate(360deg); } }\n", ""]);
+	exports.push([module.id, ".sidebar {\n  background: #2A3F54;\n  top: 0;\n  left: 0;\n  width: 20%;\n  height: 100%;\n  padding: 20px;\n  color: white;\n  position: fixed; }\n  .sidebar ul {\n    list-style-type: none; }\n  .sidebar a {\n    padding-left: 5px;\n    padding-bottom: 20px;\n    text-decoration: none;\n    font-size: 1em;\n    color: #818181;\n    display: inline-block; }\n  .sidebar a:hover {\n    background: aliceblue; }\n\n.summary-pane {\n  height: 160px;\n  margin-bottom: 20px;\n  padding-top: 20px;\n  width: 80%;\n  position: fixed;\n  left: 20%;\n  display: flex;\n  justify-content: space-around;\n  background: white;\n  z-index: 100;\n  box-shadow: 5px 2px lightgrey;\n  overflow: hidden; }\n\n.summary-panel {\n  margin-bottom: 20px;\n  margin: 0 auto; }\n\n.device-view {\n  display: flex;\n  position: relative;\n  left: 20%;\n  padding: 30px;\n  top: 160px;\n  width: 80%;\n  flex-flow: wrap;\n  align-content: center; }\n\n.info-alert {\n  top: 160px;\n  background: #2199e8;\n  position: fixed;\n  width: 80%;\n  text-align: center;\n  color: white; }\n\n.device-panel {\n  margin: 15px;\n  margin-left: 30px;\n  width: 275px;\n  min-height: 210px;\n  padding-top: 10px;\n  padding: 10px;\n  box-shadow: 2px 2px lightgray;\n  background: white; }\n\n.device-panel-contents {\n  color: grey;\n  line-height: 10px; }\n  .device-panel-contents .device-panel-header h6 {\n    padding-top: 10px;\n    padding-left: 5px;\n    line-height: 10px;\n    display: inline-block; }\n  .device-panel-contents .device-panel-header span {\n    float: right; }\n  .device-panel-contents .device-panel-value {\n    text-align: center;\n    padding-top: 10px;\n    background: #F7F7F7; }\n\n.details-view {\n  position: relative;\n  left: 22%;\n  top: 150px; }\n\nhtml, body {\n  height: 100%;\n  background: #F7F7F7; }\n\n.loader-container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  height: 500px;\n  width: 100%; }\n\n.loader {\n  border: 16px solid #f3f3f3;\n  /* Light grey */\n  border-top: 16px solid #3498db;\n  /* Blue */\n  border-radius: 50%;\n  width: 60px;\n  height: 60px;\n  animation: spin 2s linear infinite; }\n\n@keyframes spin {\n  0% {\n    transform: rotate(0deg); }\n  100% {\n    transform: rotate(360deg); } }\n", ""]);
 
 	// exports
 
@@ -29797,6 +29835,149 @@
 /***/ function(module, exports) {
 
 	module.exports = "/**\n * JustGage - animated gauges using RaphaelJS\n * Check http://www.justgage.com for official releases\n * Licensed under MIT.\n * @author Bojan Djuricic (@Toorshia)\n **/\n\nJustGage = function(config) {\n\n  var obj = this;\n\n  // Helps in case developer wants to debug it. unobtrusive\n  if (config === null || config === undefined) {\n    console.log('* justgage: Make sure to pass options to the constructor!');\n    return false;\n  }\n\n  var node;\n\n  if (config.id !== null && config.id !== undefined) {\n    node = document.getElementById(config.id);\n    if (!node) {\n      console.log('* justgage: No element with id : %s found', config.id);\n      return false;\n    }\n  } else if (config.parentNode !== null && config.parentNode !== undefined) {\n    node = config.parentNode;\n  } else {\n    console.log('* justgage: Make sure to pass the existing element id or parentNode to the constructor.');\n    return false;\n  }\n\n  var dataset = node.dataset ? node.dataset : {};\n\n  // check for defaults\n  var defaults = (config.defaults !== null && config.defaults !== undefined) ? config.defaults : false;\n  if (defaults !== false) {\n    config = extend({}, config, defaults);\n    delete config.defaults;\n  }\n\n  // configurable parameters\n  obj.config = {\n    // id : string\n    // this is container element id\n    id: config.id,\n\n    // value : float\n    // value gauge is showing\n    value: kvLookup('value', config, dataset, 0, 'float'),\n\n    // defaults : bool\n    // defaults parameter to use\n    defaults: kvLookup('defaults', config, dataset, 0, false),\n\n    // parentNode : node object\n    // this is container element\n    parentNode: kvLookup('parentNode', config, dataset, null),\n\n    // width : int\n    // gauge width\n    width: kvLookup('width', config, dataset, null),\n\n    // height : int\n    // gauge height\n    height: kvLookup('height', config, dataset, null),\n\n    // title : string\n    // gauge title\n    title: kvLookup('title', config, dataset, \"\"),\n\n    // titleFontColor : string\n    // color of gauge title\n    titleFontColor: kvLookup('titleFontColor', config, dataset, \"#999999\"),\n\n    // titleFontFamily : string\n    // color of gauge title\n    titleFontFamily: kvLookup('titleFontFamily', config, dataset, \"sans-serif\"),\n\n    // titlePosition : string\n    // 'above' or 'below'\n    titlePosition: kvLookup('titlePosition', config, dataset, \"above\"),\n\n    // valueFontColor : string\n    // color of label showing current value\n    valueFontColor: kvLookup('valueFontColor', config, dataset, \"#010101\"),\n\n    // valueFontFamily : string\n    // color of label showing current value\n    valueFontFamily: kvLookup('valueFontFamily', config, dataset, \"Arial\"),\n\n    // symbol : string\n    // special symbol to show next to value\n    symbol: kvLookup('symbol', config, dataset, ''),\n\n    // min : float\n    // min value\n    min: kvLookup('min', config, dataset, 0, 'float'),\n\n    // max : float\n    // max value\n    max: kvLookup('max', config, dataset, 100, 'float'),\n\n    // reverse : bool\n    // reverse min and max\n    reverse: kvLookup('reverse', config, dataset, false),\n\n    // humanFriendlyDecimal : int\n    // number of decimal places for our human friendly number to contain\n    humanFriendlyDecimal: kvLookup('humanFriendlyDecimal', config, dataset, 0),\n\n\n    // textRenderer: func\n    // function applied before rendering text\n    textRenderer: kvLookup('textRenderer', config, dataset, null),\n\n    // gaugeWidthScale : float\n    // width of the gauge element\n    gaugeWidthScale: kvLookup('gaugeWidthScale', config, dataset, 1.0),\n\n    // gaugeColor : string\n    // background color of gauge element\n    gaugeColor: kvLookup('gaugeColor', config, dataset, \"#edebeb\"),\n\n    // label : string\n    // text to show below value\n    label: kvLookup('label', config, dataset, ''),\n\n    // labelFontColor : string\n    // color of label showing label under value\n    labelFontColor: kvLookup('labelFontColor', config, dataset, \"#b3b3b3\"),\n\n    // shadowOpacity : int\n    // 0 ~ 1\n    shadowOpacity: kvLookup('shadowOpacity', config, dataset, 0.2),\n\n    // shadowSize: int\n    // inner shadow size\n    shadowSize: kvLookup('shadowSize', config, dataset, 5),\n\n    // shadowVerticalOffset : int\n    // how much shadow is offset from top\n    shadowVerticalOffset: kvLookup('shadowVerticalOffset', config, dataset, 3),\n\n    // levelColors : string[]\n    // colors of indicator, from lower to upper, in RGB format\n    levelColors: kvLookup('levelColors', config, dataset, [\"#a9d70b\", \"#f9c802\", \"#ff0000\"], 'array', ','),\n\n    // startAnimationTime : int\n    // length of initial animation\n    startAnimationTime: kvLookup('startAnimationTime', config, dataset, 700),\n\n    // startAnimationType : string\n    // type of initial animation (linear, >, <,  <>, bounce)\n    startAnimationType: kvLookup('startAnimationType', config, dataset, '>'),\n\n    // refreshAnimationTime : int\n    // length of refresh animation\n    refreshAnimationTime: kvLookup('refreshAnimationTime', config, dataset, 700),\n\n    // refreshAnimationType : string\n    // type of refresh animation (linear, >, <,  <>, bounce)\n    refreshAnimationType: kvLookup('refreshAnimationType', config, dataset, '>'),\n\n    // donutStartAngle : int\n    // angle to start from when in donut mode\n    donutStartAngle: kvLookup('donutStartAngle', config, dataset, 90),\n\n    // valueMinFontSize : int\n    // absolute minimum font size for the value\n    valueMinFontSize: kvLookup('valueMinFontSize', config, dataset, 16),\n\n    // titleMinFontSize\n    // absolute minimum font size for the title\n    titleMinFontSize: kvLookup('titleMinFontSize', config, dataset, 10),\n\n    // labelMinFontSize\n    // absolute minimum font size for the label\n    labelMinFontSize: kvLookup('labelMinFontSize', config, dataset, 10),\n\n    // minLabelMinFontSize\n    // absolute minimum font size for the minimum label\n    minLabelMinFontSize: kvLookup('minLabelMinFontSize', config, dataset, 10),\n\n    // maxLabelMinFontSize\n    // absolute minimum font size for the maximum label\n    maxLabelMinFontSize: kvLookup('maxLabelMinFontSize', config, dataset, 10),\n\n    // hideValue : bool\n    // hide value text\n    hideValue: kvLookup('hideValue', config, dataset, false),\n\n    // hideMinMax : bool\n    // hide min and max values\n    hideMinMax: kvLookup('hideMinMax', config, dataset, false),\n\n    // hideInnerShadow : bool\n    // hide inner shadow\n    hideInnerShadow: kvLookup('hideInnerShadow', config, dataset, false),\n\n    // humanFriendly : bool\n    // convert large numbers for min, max, value to human friendly (e.g. 1234567 -> 1.23M)\n    humanFriendly: kvLookup('humanFriendly', config, dataset, false),\n\n    // noGradient : bool\n    // whether to use gradual color change for value, or sector-based\n    noGradient: kvLookup('noGradient', config, dataset, false),\n\n    // donut : bool\n    // show full donut gauge\n    donut: kvLookup('donut', config, dataset, false),\n\n    // relativeGaugeSize : bool\n    // whether gauge size should follow changes in container element size\n    relativeGaugeSize: kvLookup('relativeGaugeSize', config, dataset, false),\n\n    // counter : bool\n    // animate level number change\n    counter: kvLookup('counter', config, dataset, false),\n\n    // decimals : int\n    // number of digits after floating point\n    decimals: kvLookup('decimals', config, dataset, 0),\n\n    // customSectors : [] of objects\n    // number of digits after floating point\n    customSectors: kvLookup('customSectors', config, dataset, []),\n\n    // formatNumber: boolean\n    // formats numbers with commas where appropriate\n    formatNumber: kvLookup('formatNumber', config, dataset, false),\n\n    // pointer : bool\n    // show value pointer\n    pointer: kvLookup('pointer', config, dataset, false),\n\n    // pointerOptions : object\n    // define pointer look\n    pointerOptions: kvLookup('pointerOptions', config, dataset, [])\n  };\n\n  // variables\n  var\n    canvasW,\n    canvasH,\n    widgetW,\n    widgetH,\n    aspect,\n    dx,\n    dy,\n    titleFontSize,\n    titleX,\n    titleY,\n    valueFontSize,\n    valueX,\n    valueY,\n    labelFontSize,\n    labelX,\n    labelY,\n    minFontSize,\n    minX,\n    minY,\n    maxFontSize,\n    maxX,\n    maxY;\n\n  // overflow values\n  if (obj.config.value > obj.config.max) obj.config.value = obj.config.max;\n  if (obj.config.value < obj.config.min) obj.config.value = obj.config.min;\n  obj.originalValue = kvLookup('value', config, dataset, -1, 'float');\n\n  // create canvas\n  if (obj.config.id !== null && (document.getElementById(obj.config.id)) !== null) {\n    obj.canvas = Raphael(obj.config.id, \"100%\", \"100%\");\n  } else if (obj.config.parentNode !== null) {\n    obj.canvas = Raphael(obj.config.parentNode, \"100%\", \"100%\");\n  }\n\n  if (obj.config.relativeGaugeSize === true) {\n    obj.canvas.setViewBox(0, 0, 200, 150, true);\n  }\n\n  // canvas dimensions\n  if (obj.config.relativeGaugeSize === true) {\n    canvasW = 200;\n    canvasH = 150;\n  } else if (obj.config.width !== null && obj.config.height !== null) {\n    canvasW = obj.config.width;\n    canvasH = obj.config.height;\n  } else if (obj.config.parentNode !== null) {\n    obj.canvas.setViewBox(0, 0, 200, 150, true);\n    canvasW = 200;\n    canvasH = 150;\n  } else {\n    canvasW = getStyle(document.getElementById(obj.config.id), \"width\").slice(0, -2) * 1;\n    canvasH = getStyle(document.getElementById(obj.config.id), \"height\").slice(0, -2) * 1;\n  }\n\n  // widget dimensions\n  if (obj.config.donut === true) {\n\n    // DONUT *******************************\n\n    // width more than height\n    if (canvasW > canvasH) {\n      widgetH = canvasH;\n      widgetW = widgetH;\n      // width less than height\n    } else if (canvasW < canvasH) {\n      widgetW = canvasW;\n      widgetH = widgetW;\n      // if height don't fit, rescale both\n      if (widgetH > canvasH) {\n        aspect = widgetH / canvasH;\n        widgetH = widgetH / aspect;\n        widgetW = widgetH / aspect;\n      }\n      // equal\n    } else {\n      widgetW = canvasW;\n      widgetH = widgetW;\n    }\n\n    // delta\n    dx = (canvasW - widgetW) / 2;\n    dy = (canvasH - widgetH) / 2;\n\n    // title\n    titleFontSize = ((widgetH / 8) > 10) ? (widgetH / 10) : 10;\n    titleX = dx + widgetW / 2;\n    titleY = dy + widgetH / 11;\n\n    // value\n    valueFontSize = ((widgetH / 6.4) > 16) ? (widgetH / 5.4) : 18;\n    valueX = dx + widgetW / 2;\n    if (obj.config.label !== '') {\n      valueY = dy + widgetH / 1.85;\n    } else {\n      valueY = dy + widgetH / 1.7;\n    }\n\n    // label\n    labelFontSize = ((widgetH / 16) > 10) ? (widgetH / 16) : 10;\n    labelX = dx + widgetW / 2;\n    labelY = valueY + labelFontSize;\n\n    // min\n    minFontSize = ((widgetH / 16) > 10) ? (widgetH / 16) : 10;\n    minX = dx + (widgetW / 10) + (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2;\n    minY = labelY;\n\n    // max\n    maxFontSize = ((widgetH / 16) > 10) ? (widgetH / 16) : 10;\n    maxX = dx + widgetW - (widgetW / 10) - (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2;\n    maxY = labelY;\n\n  } else {\n    // HALF *******************************\n\n    // width more than height\n    if (canvasW > canvasH) {\n      widgetH = canvasH;\n      widgetW = widgetH * 1.25;\n      //if width doesn't fit, rescale both\n      if (widgetW > canvasW) {\n        aspect = widgetW / canvasW;\n        widgetW = widgetW / aspect;\n        widgetH = widgetH / aspect;\n      }\n      // width less than height\n    } else if (canvasW < canvasH) {\n      widgetW = canvasW;\n      widgetH = widgetW / 1.25;\n      // if height don't fit, rescale both\n      if (widgetH > canvasH) {\n        aspect = widgetH / canvasH;\n        widgetH = widgetH / aspect;\n        widgetW = widgetH / aspect;\n      }\n      // equal\n    } else {\n      widgetW = canvasW;\n      widgetH = widgetW * 0.75;\n    }\n\n    // delta\n    dx = (canvasW - widgetW) / 2;\n    dy = (canvasH - widgetH) / 2;\n    if (obj.config.titlePosition === 'below') {\n      // shift whole thing down\n      dy -= (widgetH / 6.4);\n    }\n\n    // title\n    titleFontSize = ((widgetH / 8) > obj.config.titleMinFontSize) ? (widgetH / 10) : obj.config.titleMinFontSize;\n    titleX = dx + widgetW / 2;\n    titleY = dy + (obj.config.titlePosition === 'below' ? (widgetH * 1.07) : (widgetH / 6.4));\n\n    // value\n    valueFontSize = ((widgetH / 6.5) > obj.config.valueMinFontSize) ? (widgetH / 6.5) : obj.config.valueMinFontSize;\n    valueX = dx + widgetW / 2;\n    valueY = dy + widgetH / 1.275;\n\n    // label\n    labelFontSize = ((widgetH / 16) > obj.config.labelMinFontSize) ? (widgetH / 16) : obj.config.labelMinFontSize;\n    labelX = dx + widgetW / 2;\n    labelY = valueY + valueFontSize / 2 + 5;\n\n    // min\n    minFontSize = ((widgetH / 16) > obj.config.minLabelMinFontSize) ? (widgetH / 16) : obj.config.minLabelMinFontSize;\n    minX = dx + (widgetW / 10) + (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2;\n    minY = labelY;\n\n    // max\n    maxFontSize = ((widgetH / 16) > obj.config.maxLabelMinFontSize) ? (widgetH / 16) : obj.config.maxLabelMinFontSize;\n    maxX = dx + widgetW - (widgetW / 10) - (widgetW / 6.666666666666667 * obj.config.gaugeWidthScale) / 2;\n    maxY = labelY;\n  }\n\n  // parameters\n  obj.params = {\n    canvasW: canvasW,\n    canvasH: canvasH,\n    widgetW: widgetW,\n    widgetH: widgetH,\n    dx: dx,\n    dy: dy,\n    titleFontSize: titleFontSize,\n    titleX: titleX,\n    titleY: titleY,\n    valueFontSize: valueFontSize,\n    valueX: valueX,\n    valueY: valueY,\n    labelFontSize: labelFontSize,\n    labelX: labelX,\n    labelY: labelY,\n    minFontSize: minFontSize,\n    minX: minX,\n    minY: minY,\n    maxFontSize: maxFontSize,\n    maxX: maxX,\n    maxY: maxY\n  };\n\n  // var clear\n  canvasW, canvasH, widgetW, widgetH, aspect, dx, dy, titleFontSize, titleX, titleY, valueFontSize, valueX, valueY, labelFontSize, labelX, labelY, minFontSize, minX, minY, maxFontSize, maxX, maxY = null;\n\n  // pki - custom attribute for generating gauge paths\n  obj.canvas.customAttributes.pki = function(value, min, max, w, h, dx, dy, gws, donut, reverse) {\n\n    var alpha, Ro, Ri, Cx, Cy, Xo, Yo, Xi, Yi, path;\n\n    if (donut) {\n      alpha = (1 - 2 * (value - min) / (max - min)) * Math.PI;\n      Ro = w / 2 - w / 7;\n      Ri = Ro - w / 6.666666666666667 * gws;\n\n      Cx = w / 2 + dx;\n      Cy = h / 1.95 + dy;\n\n      Xo = w / 2 + dx + Ro * Math.cos(alpha);\n      Yo = h - (h - Cy) - Ro * Math.sin(alpha);\n      Xi = w / 2 + dx + Ri * Math.cos(alpha);\n      Yi = h - (h - Cy) - Ri * Math.sin(alpha);\n\n      path = \"M\" + (Cx - Ri) + \",\" + Cy + \" \";\n      path += \"L\" + (Cx - Ro) + \",\" + Cy + \" \";\n      if (value > ((max - min) / 2)) {\n        path += \"A\" + Ro + \",\" + Ro + \" 0 0 1 \" + (Cx + Ro) + \",\" + Cy + \" \";\n      }\n      path += \"A\" + Ro + \",\" + Ro + \" 0 0 1 \" + Xo + \",\" + Yo + \" \";\n      path += \"L\" + Xi + \",\" + Yi + \" \";\n      if (value > ((max - min) / 2)) {\n        path += \"A\" + Ri + \",\" + Ri + \" 0 0 0 \" + (Cx + Ri) + \",\" + Cy + \" \";\n      }\n      path += \"A\" + Ri + \",\" + Ri + \" 0 0 0 \" + (Cx - Ri) + \",\" + Cy + \" \";\n      path += \"Z \";\n\n      return {\n        path: path\n      };\n\n    } else {\n      alpha = (1 - (value - min) / (max - min)) * Math.PI;\n      Ro = w / 2 - w / 10;\n      Ri = Ro - w / 6.666666666666667 * gws;\n\n      Cx = w / 2 + dx;\n      Cy = h / 1.25 + dy;\n\n      Xo = w / 2 + dx + Ro * Math.cos(alpha);\n      Yo = h - (h - Cy) - Ro * Math.sin(alpha);\n      Xi = w / 2 + dx + Ri * Math.cos(alpha);\n      Yi = h - (h - Cy) - Ri * Math.sin(alpha);\n\n      path = \"M\" + (Cx - Ri) + \",\" + Cy + \" \";\n      path += \"L\" + (Cx - Ro) + \",\" + Cy + \" \";\n      path += \"A\" + Ro + \",\" + Ro + \" 0 0 1 \" + Xo + \",\" + Yo + \" \";\n      path += \"L\" + Xi + \",\" + Yi + \" \";\n      path += \"A\" + Ri + \",\" + Ri + \" 0 0 0 \" + (Cx - Ri) + \",\" + Cy + \" \";\n      path += \"Z \";\n\n      return {\n        path: path\n      };\n    }\n\n    // var clear\n    alpha, Ro, Ri, Cx, Cy, Xo, Yo, Xi, Yi, path = null;\n  };\n\n  // ndl - custom attribute for generating needle path\n  obj.canvas.customAttributes.ndl = function(value, min, max, w, h, dx, dy, gws, donut) {\n\n    var dlt = w * 3.5 / 100;\n    var dlb = w / 15;\n    var dw = w / 100;\n\n    if (obj.config.pointerOptions.toplength != null && obj.config.pointerOptions.toplength != undefined) dlt = obj.config.pointerOptions.toplength;\n    if (obj.config.pointerOptions.bottomlength != null && obj.config.pointerOptions.bottomlength != undefined) dlb = obj.config.pointerOptions.bottomlength;\n    if (obj.config.pointerOptions.bottomwidth != null && obj.config.pointerOptions.bottomwidth != undefined) dw = obj.config.pointerOptions.bottomwidth;\n\n    var alpha, Ro, Ri, Cx, Cy, Xo, Yo, Xi, Yi, Xc, Yc, Xz, Yz, Xa, Ya, Xb, Yb, path;\n\n    if (donut) {\n\n      alpha = (1 - 2 * (value - min) / (max - min)) * Math.PI;\n      Ro = w / 2 - w / 7;\n      Ri = Ro - w / 6.666666666666667 * gws;\n\n      Cx = w / 2 + dx;\n      Cy = h / 1.95 + dy;\n\n      Xo = w / 2 + dx + Ro * Math.cos(alpha);\n      Yo = h - (h - Cy) - Ro * Math.sin(alpha);\n      Xi = w / 2 + dx + Ri * Math.cos(alpha);\n      Yi = h - (h - Cy) - Ri * Math.sin(alpha);\n\n      Xc = Xo + dlt * Math.cos(alpha);\n      Yc = Yo - dlt * Math.sin(alpha);\n      Xz = Xi - dlb * Math.cos(alpha);\n      Yz = Yi + dlb * Math.sin(alpha);\n\n      Xa = Xz + dw * Math.sin(alpha);\n      Ya = Yz + dw * Math.cos(alpha);\n      Xb = Xz - dw * Math.sin(alpha);\n      Yb = Yz - dw * Math.cos(alpha);\n\n      path = 'M' + Xa + ',' + Ya + ' ';\n      path += 'L' + Xb + ',' + Yb + ' ';\n      path += 'L' + Xc + ',' + Yc + ' ';\n      path += 'Z ';\n\n      return {\n        path: path\n      };\n\n    } else {\n      alpha = (1 - (value - min) / (max - min)) * Math.PI;\n      Ro = w / 2 - w / 10;\n      Ri = Ro - w / 6.666666666666667 * gws;\n\n      Cx = w / 2 + dx;\n      Cy = h / 1.25 + dy;\n\n      Xo = w / 2 + dx + Ro * Math.cos(alpha);\n      Yo = h - (h - Cy) - Ro * Math.sin(alpha);\n      Xi = w / 2 + dx + Ri * Math.cos(alpha);\n      Yi = h - (h - Cy) - Ri * Math.sin(alpha);\n\n      Xc = Xo + dlt * Math.cos(alpha);\n      Yc = Yo - dlt * Math.sin(alpha);\n      Xz = Xi - dlb * Math.cos(alpha);\n      Yz = Yi + dlb * Math.sin(alpha);\n\n      Xa = Xz + dw * Math.sin(alpha);\n      Ya = Yz + dw * Math.cos(alpha);\n      Xb = Xz - dw * Math.sin(alpha);\n      Yb = Yz - dw * Math.cos(alpha);\n\n      path = 'M' + Xa + ',' + Ya + ' ';\n      path += 'L' + Xb + ',' + Yb + ' ';\n      path += 'L' + Xc + ',' + Yc + ' ';\n      path += 'Z ';\n\n      return {\n        path: path\n      };\n    }\n\n    // var clear\n    alpha, Ro, Ri, Cx, Cy, Xo, Yo, Xi, Yi, Xc, Yc, Xz, Yz, Xa, Ya, Xb, Yb, path = null;\n  };\n\n  // gauge\n  obj.gauge = obj.canvas.path().attr({\n    \"stroke\": \"none\",\n    \"fill\": obj.config.gaugeColor,\n    pki: [\n      obj.config.max,\n      obj.config.min,\n      obj.config.max,\n      obj.params.widgetW,\n      obj.params.widgetH,\n      obj.params.dx,\n      obj.params.dy,\n      obj.config.gaugeWidthScale,\n      obj.config.donut,\n      obj.config.reverse\n    ]\n  });\n\n  // level\n  obj.level = obj.canvas.path().attr({\n    \"stroke\": \"none\",\n    \"fill\": getColor(obj.config.value, (obj.config.value - obj.config.min) / (obj.config.max - obj.config.min), obj.config.levelColors, obj.config.noGradient, obj.config.customSectors),\n    pki: [\n      obj.config.min,\n      obj.config.min,\n      obj.config.max,\n      obj.params.widgetW,\n      obj.params.widgetH,\n      obj.params.dx,\n      obj.params.dy,\n      obj.config.gaugeWidthScale,\n      obj.config.donut,\n      obj.config.reverse\n    ]\n  });\n  if (obj.config.donut) {\n    obj.level.transform(\"r\" + obj.config.donutStartAngle + \", \" + (obj.params.widgetW / 2 + obj.params.dx) + \", \" + (obj.params.widgetH / 1.95 + obj.params.dy));\n  }\n\n  if (obj.config.pointer) {\n    // needle\n    obj.needle = obj.canvas.path().attr({\n      \"stroke\": (obj.config.pointerOptions.stroke !== null && obj.config.pointerOptions.stroke !== undefined) ? obj.config.pointerOptions.stroke : \"none\",\n      \"stroke-width\": (obj.config.pointerOptions.stroke_width !== null && obj.config.pointerOptions.stroke_width !== undefined) ? obj.config.pointerOptions.stroke_width : 0,\n      \"stroke-linecap\": (obj.config.pointerOptions.stroke_linecap !== null && obj.config.pointerOptions.stroke_linecap !== undefined) ? obj.config.pointerOptions.stroke_linecap : \"square\",\n      \"fill\": (obj.config.pointerOptions.color !== null && obj.config.pointerOptions.color !== undefined) ? obj.config.pointerOptions.color : \"#000000\",\n      ndl: [\n        obj.config.min,\n        obj.config.min,\n        obj.config.max,\n        obj.params.widgetW,\n        obj.params.widgetH,\n        obj.params.dx,\n        obj.params.dy,\n        obj.config.gaugeWidthScale,\n        obj.config.donut\n      ]\n    });\n\n    if (obj.config.donut) {\n      obj.needle.transform(\"r\" + obj.config.donutStartAngle + \", \" + (obj.params.widgetW / 2 + obj.params.dx) + \", \" + (obj.params.widgetH / 1.95 + obj.params.dy));\n    }\n\n  }\n\n  // title\n  obj.txtTitle = obj.canvas.text(obj.params.titleX, obj.params.titleY, obj.config.title);\n  obj.txtTitle.attr({\n    \"font-size\": obj.params.titleFontSize,\n    \"font-weight\": \"bold\",\n    \"font-family\": obj.config.titleFontFamily,\n    \"fill\": obj.config.titleFontColor,\n    \"fill-opacity\": \"1\"\n  });\n  setDy(obj.txtTitle, obj.params.titleFontSize, obj.params.titleY);\n\n  // value\n  obj.txtValue = obj.canvas.text(obj.params.valueX, obj.params.valueY, 0);\n  obj.txtValue.attr({\n    \"font-size\": obj.params.valueFontSize,\n    \"font-weight\": \"bold\",\n    \"font-family\": obj.config.valueFontFamily,\n    \"fill\": obj.config.valueFontColor,\n    \"fill-opacity\": \"0\"\n  });\n  setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);\n\n  // label\n  obj.txtLabel = obj.canvas.text(obj.params.labelX, obj.params.labelY, obj.config.label);\n  obj.txtLabel.attr({\n    \"font-size\": obj.params.labelFontSize,\n    \"font-weight\": \"normal\",\n    \"font-family\": \"Arial\",\n    \"fill\": obj.config.labelFontColor,\n    \"fill-opacity\": \"0\"\n  });\n  setDy(obj.txtLabel, obj.params.labelFontSize, obj.params.labelY);\n\n  // min\n  var min = obj.config.min;\n  if (obj.config.reverse) {\n    min = obj.config.max;\n  }\n\n  obj.txtMinimum = min;\n  if (obj.config.humanFriendly) {\n    obj.txtMinimum = humanFriendlyNumber(min, obj.config.humanFriendlyDecimal);\n  } else if (obj.config.formatNumber) {\n    obj.txtMinimum = formatNumber(min);\n  }\n  obj.txtMin = obj.canvas.text(obj.params.minX, obj.params.minY, obj.txtMinimum);\n  obj.txtMin.attr({\n    \"font-size\": obj.params.minFontSize,\n    \"font-weight\": \"normal\",\n    \"font-family\": \"Arial\",\n    \"fill\": obj.config.labelFontColor,\n    \"fill-opacity\": (obj.config.hideMinMax || obj.config.donut) ? \"0\" : \"1\"\n  });\n  setDy(obj.txtMin, obj.params.minFontSize, obj.params.minY);\n\n  // max\n  var max = obj.config.max;\n  if (obj.config.reverse) {\n    max = obj.config.min;\n  }\n  obj.txtMaximum = max;\n  if (obj.config.humanFriendly) {\n    obj.txtMaximum = humanFriendlyNumber(max, obj.config.humanFriendlyDecimal);\n  } else if (obj.config.formatNumber) {\n    obj.txtMaximum = formatNumber(max);\n  }\n  obj.txtMax = obj.canvas.text(obj.params.maxX, obj.params.maxY, obj.txtMaximum);\n  obj.txtMax.attr({\n    \"font-size\": obj.params.maxFontSize,\n    \"font-weight\": \"normal\",\n    \"font-family\": \"Arial\",\n    \"fill\": obj.config.labelFontColor,\n    \"fill-opacity\": (obj.config.hideMinMax || obj.config.donut) ? \"0\" : \"1\"\n  });\n  setDy(obj.txtMax, obj.params.maxFontSize, obj.params.maxY);\n\n  var defs = obj.canvas.canvas.childNodes[1];\n  var svg = \"http://www.w3.org/2000/svg\";\n\n  if (ie !== 'undefined' && ie < 9) {\n    // VML mode - no SVG & SVG filter support\n  } else if (ie !== 'undefined') {\n    onCreateElementNsReady(function() {\n      obj.generateShadow(svg, defs);\n    });\n  } else {\n    obj.generateShadow(svg, defs);\n  }\n\n  // var clear\n  defs, svg = null;\n\n  // set value to display\n  if (obj.config.textRenderer) {\n    obj.originalValue = obj.config.textRenderer(obj.originalValue);\n  } else if (obj.config.humanFriendly) {\n    obj.originalValue = humanFriendlyNumber(obj.originalValue, obj.config.humanFriendlyDecimal) + obj.config.symbol;\n  } else if (obj.config.formatNumber) {\n    obj.originalValue = formatNumber(obj.originalValue) + obj.config.symbol;\n  } else {\n    obj.originalValue = (obj.originalValue * 1).toFixed(obj.config.decimals) + obj.config.symbol;\n  }\n\n  if (obj.config.counter === true) {\n    //on each animation frame\n    eve.on(\"raphael.anim.frame.\" + (obj.level.id), function() {\n      var currentValue = obj.level.attr(\"pki\")[0];\n      if (obj.config.reverse) {\n        currentValue = (obj.config.max * 1) + (obj.config.min * 1) - (obj.level.attr(\"pki\")[0] * 1);\n      }\n      if (obj.config.textRenderer) {\n        obj.txtValue.attr(\"text\", obj.config.textRenderer(Math.floor(currentValue)));\n      } else if (obj.config.humanFriendly) {\n        obj.txtValue.attr(\"text\", humanFriendlyNumber(Math.floor(currentValue), obj.config.humanFriendlyDecimal) + obj.config.symbol);\n      } else if (obj.config.formatNumber) {\n        obj.txtValue.attr(\"text\", formatNumber(Math.floor(currentValue)) + obj.config.symbol);\n      } else {\n        obj.txtValue.attr(\"text\", (currentValue * 1).toFixed(obj.config.decimals) + obj.config.symbol);\n      }\n      setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);\n      currentValue = null;\n    });\n    //on animation end\n    eve.on(\"raphael.anim.finish.\" + (obj.level.id), function() {\n      obj.txtValue.attr({\n        \"text\": obj.originalValue\n      });\n      setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);\n    });\n  } else {\n    //on animation start\n    eve.on(\"raphael.anim.start.\" + (obj.level.id), function() {\n      obj.txtValue.attr({\n        \"text\": obj.originalValue\n      });\n      setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);\n    });\n  }\n\n  // animate gauge level, value & label\n  var rvl = obj.config.value;\n  if (obj.config.reverse) {\n    rvl = (obj.config.max * 1) + (obj.config.min * 1) - (obj.config.value * 1);\n  }\n  obj.level.animate({\n    pki: [\n      rvl,\n      obj.config.min,\n      obj.config.max,\n      obj.params.widgetW,\n      obj.params.widgetH,\n      obj.params.dx,\n      obj.params.dy,\n      obj.config.gaugeWidthScale,\n      obj.config.donut,\n      obj.config.reverse\n    ]\n  }, obj.config.startAnimationTime, obj.config.startAnimationType);\n\n  if (obj.config.pointer) {\n    obj.needle.animate({\n      ndl: [\n        rvl,\n        obj.config.min,\n        obj.config.max,\n        obj.params.widgetW,\n        obj.params.widgetH,\n        obj.params.dx,\n        obj.params.dy,\n        obj.config.gaugeWidthScale,\n        obj.config.donut\n      ]\n    }, obj.config.startAnimationTime, obj.config.startAnimationType);\n  }\n\n  obj.txtValue.animate({\n    \"fill-opacity\": (obj.config.hideValue) ? \"0\" : \"1\"\n  }, obj.config.startAnimationTime, obj.config.startAnimationType);\n  obj.txtLabel.animate({\n    \"fill-opacity\": \"1\"\n  }, obj.config.startAnimationTime, obj.config.startAnimationType);\n};\n\n/** Refresh gauge level */\nJustGage.prototype.refresh = function(val, max) {\n\n  var obj = this;\n  var displayVal, color, max = max || null;\n\n  // set new max\n  if (max !== null) {\n    obj.config.max = max;\n    // TODO: update customSectors\n\n    obj.txtMaximum = obj.config.max;\n    if (obj.config.humanFriendly) {\n      obj.txtMaximum = humanFriendlyNumber(obj.config.max, obj.config.humanFriendlyDecimal);\n    } else if (obj.config.formatNumber) {\n      obj.txtMaximum = formatNumber(obj.config.max);\n    }\n    if (!obj.config.reverse) {\n      obj.txtMax.attr({\n        \"text\": obj.txtMaximum\n      });\n      setDy(obj.txtMax, obj.params.maxFontSize, obj.params.maxY);\n    } else {\n      obj.txtMin.attr({\n        \"text\": obj.txtMaximum\n      });\n      setDy(obj.txtMin, obj.params.minFontSize, obj.params.minY);\n    }\n  }\n\n  // overflow values\n  displayVal = val;\n  if ((val * 1) > (obj.config.max * 1)) {\n    val = (obj.config.max * 1);\n  }\n  if ((val * 1) < (obj.config.min * 1)) {\n    val = (obj.config.min * 1);\n  }\n\n  color = getColor(val, (val - obj.config.min) / (obj.config.max - obj.config.min), obj.config.levelColors, obj.config.noGradient, obj.config.customSectors);\n\n  if (obj.config.textRenderer) {\n    displayVal = obj.config.textRenderer(displayVal);\n  } else if (obj.config.humanFriendly) {\n    displayVal = humanFriendlyNumber(displayVal, obj.config.humanFriendlyDecimal) + obj.config.symbol;\n  } else if (obj.config.formatNumber) {\n    displayVal = formatNumber((displayVal * 1).toFixed(obj.config.decimals)) + obj.config.symbol;\n  } else {\n    displayVal = (displayVal * 1).toFixed(obj.config.decimals) + obj.config.symbol;\n  }\n  obj.originalValue = displayVal;\n  obj.config.value = val * 1;\n\n  if (!obj.config.counter) {\n    obj.txtValue.attr({\n      \"text\": displayVal\n    });\n    setDy(obj.txtValue, obj.params.valueFontSize, obj.params.valueY);\n  }\n\n  var rvl = obj.config.value;\n  if (obj.config.reverse) {\n    rvl = (obj.config.max * 1) + (obj.config.min * 1) - (obj.config.value * 1);\n  }\n  obj.level.animate({\n    pki: [\n      rvl,\n      obj.config.min,\n      obj.config.max,\n      obj.params.widgetW,\n      obj.params.widgetH,\n      obj.params.dx,\n      obj.params.dy,\n      obj.config.gaugeWidthScale,\n      obj.config.donut,\n      obj.config.reverse\n    ],\n    \"fill\": color\n  }, obj.config.refreshAnimationTime, obj.config.refreshAnimationType);\n\n  if (obj.config.pointer) {\n    obj.needle.animate({\n      ndl: [\n        rvl,\n        obj.config.min,\n        obj.config.max,\n        obj.params.widgetW,\n        obj.params.widgetH,\n        obj.params.dx,\n        obj.params.dy,\n        obj.config.gaugeWidthScale,\n        obj.config.donut\n      ]\n    }, obj.config.refreshAnimationTime, obj.config.refreshAnimationType);\n  }\n\n  // var clear\n  obj, displayVal, color, max = null;\n};\n\n/** Generate shadow */\nJustGage.prototype.generateShadow = function(svg, defs) {\n\n  var obj = this;\n  var sid = \"inner-shadow-\" + obj.config.id;\n  var gaussFilter, feOffset, feGaussianBlur, feComposite1, feFlood, feComposite2, feComposite3;\n\n  // FILTER\n  gaussFilter = document.createElementNS(svg, \"filter\");\n  gaussFilter.setAttribute(\"id\", sid);\n  defs.appendChild(gaussFilter);\n\n  // offset\n  feOffset = document.createElementNS(svg, \"feOffset\");\n  feOffset.setAttribute(\"dx\", 0);\n  feOffset.setAttribute(\"dy\", obj.config.shadowVerticalOffset);\n  gaussFilter.appendChild(feOffset);\n\n  // blur\n  feGaussianBlur = document.createElementNS(svg, \"feGaussianBlur\");\n  feGaussianBlur.setAttribute(\"result\", \"offset-blur\");\n  feGaussianBlur.setAttribute(\"stdDeviation\", obj.config.shadowSize);\n  gaussFilter.appendChild(feGaussianBlur);\n\n  // composite 1\n  feComposite1 = document.createElementNS(svg, \"feComposite\");\n  feComposite1.setAttribute(\"operator\", \"out\");\n  feComposite1.setAttribute(\"in\", \"SourceGraphic\");\n  feComposite1.setAttribute(\"in2\", \"offset-blur\");\n  feComposite1.setAttribute(\"result\", \"inverse\");\n  gaussFilter.appendChild(feComposite1);\n\n  // flood\n  feFlood = document.createElementNS(svg, \"feFlood\");\n  feFlood.setAttribute(\"flood-color\", \"black\");\n  feFlood.setAttribute(\"flood-opacity\", obj.config.shadowOpacity);\n  feFlood.setAttribute(\"result\", \"color\");\n  gaussFilter.appendChild(feFlood);\n\n  // composite 2\n  feComposite2 = document.createElementNS(svg, \"feComposite\");\n  feComposite2.setAttribute(\"operator\", \"in\");\n  feComposite2.setAttribute(\"in\", \"color\");\n  feComposite2.setAttribute(\"in2\", \"inverse\");\n  feComposite2.setAttribute(\"result\", \"shadow\");\n  gaussFilter.appendChild(feComposite2);\n\n  // composite 3\n  feComposite3 = document.createElementNS(svg, \"feComposite\");\n  feComposite3.setAttribute(\"operator\", \"over\");\n  feComposite3.setAttribute(\"in\", \"shadow\");\n  feComposite3.setAttribute(\"in2\", \"SourceGraphic\");\n  gaussFilter.appendChild(feComposite3);\n\n  // set shadow\n  if (!obj.config.hideInnerShadow) {\n    obj.canvas.canvas.childNodes[2].setAttribute(\"filter\", \"url(#\" + sid + \")\");\n    obj.canvas.canvas.childNodes[3].setAttribute(\"filter\", \"url(#\" + sid + \")\");\n  }\n\n  // var clear\n  gaussFilter, feOffset, feGaussianBlur, feComposite1, feFlood, feComposite2, feComposite3 = null;\n};\n\n//\n// tiny helper function to lookup value of a key from two hash tables\n// if none found, return defaultvalue\n//\n// key: string\n// tablea: object\n// tableb: DOMStringMap|object\n// defval: string|integer|float|null\n// datatype: return datatype\n// delimiter: delimiter to be used in conjunction with datatype formatting\n//\nfunction kvLookup(key, tablea, tableb, defval, datatype, delimiter) {\n  var val = defval;\n  var canConvert = false;\n  if (!(key === null || key === undefined)) {\n    if (tableb !== null && tableb !== undefined && typeof tableb === \"object\" && key in tableb) {\n      val = tableb[key];\n      canConvert = true;\n    } else if (tablea !== null && tablea !== undefined && typeof tablea === \"object\" && key in tablea) {\n      val = tablea[key];\n      canConvert = true;\n    } else {\n      val = defval;\n    }\n    if (canConvert === true) {\n      if (datatype !== null && datatype !== undefined) {\n        switch (datatype) {\n          case 'int':\n            val = parseInt(val, 10);\n            break;\n          case 'float':\n            val = parseFloat(val);\n            break;\n          default:\n            break;\n        }\n      }\n    }\n  }\n  return val;\n};\n\n/** Get color for value */\nfunction getColor(val, pct, col, noGradient, custSec) {\n\n  var no, inc, colors, percentage, rval, gval, bval, lower, upper, range, rangePct, pctLower, pctUpper, color;\n  var noGradient = noGradient || custSec.length > 0;\n\n  if (custSec.length > 0) {\n    for (var i = 0; i < custSec.length; i++) {\n      if (val > custSec[i].lo && val <= custSec[i].hi) {\n        return custSec[i].color;\n      }\n    }\n  }\n\n  no = col.length;\n  if (no === 1) return col[0];\n  inc = (noGradient) ? (1 / no) : (1 / (no - 1));\n  colors = [];\n  for (i = 0; i < col.length; i++) {\n    percentage = (noGradient) ? (inc * (i + 1)) : (inc * i);\n    rval = parseInt((cutHex(col[i])).substring(0, 2), 16);\n    gval = parseInt((cutHex(col[i])).substring(2, 4), 16);\n    bval = parseInt((cutHex(col[i])).substring(4, 6), 16);\n    colors[i] = {\n      pct: percentage,\n      color: {\n        r: rval,\n        g: gval,\n        b: bval\n      }\n    };\n  }\n\n  if (pct === 0) {\n    return 'rgb(' + [colors[0].color.r, colors[0].color.g, colors[0].color.b].join(',') + ')';\n  }\n\n  for (var j = 0; j < colors.length; j++) {\n    if (pct <= colors[j].pct) {\n      if (noGradient) {\n        return 'rgb(' + [colors[j].color.r, colors[j].color.g, colors[j].color.b].join(',') + ')';\n      } else {\n        lower = colors[j - 1];\n        upper = colors[j];\n        range = upper.pct - lower.pct;\n        rangePct = (pct - lower.pct) / range;\n        pctLower = 1 - rangePct;\n        pctUpper = rangePct;\n        color = {\n          r: Math.floor(lower.color.r * pctLower + upper.color.r * pctUpper),\n          g: Math.floor(lower.color.g * pctLower + upper.color.g * pctUpper),\n          b: Math.floor(lower.color.b * pctLower + upper.color.b * pctUpper)\n        };\n        return 'rgb(' + [color.r, color.g, color.b].join(',') + ')';\n      }\n    }\n  }\n\n}\n\n/** Fix Raphael display:none tspan dy attribute bug */\nfunction setDy(elem, fontSize, txtYpos) {\n  if ((!ie || ie > 9) && elem.node.firstChild.attributes.dy) {\n    elem.node.firstChild.attributes.dy.value = 0;\n  }\n}\n\n/** Random integer  */\nfunction getRandomInt(min, max) {\n  return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\n/**  Cut hex  */\nfunction cutHex(str) {\n  return (str.charAt(0) == \"#\") ? str.substring(1, 7) : str;\n}\n\n/**  Human friendly number suffix - From: http://stackoverflow.com/questions/2692323/code-golf-friendly-number-abbreviator */\nfunction humanFriendlyNumber(n, d) {\n  var p, d2, i, s;\n\n  p = Math.pow;\n  d2 = p(10, d);\n  i = 7;\n  while (i) {\n    s = p(10, i-- * 3);\n    if (s <= n) {\n      n = Math.round(n * d2 / s) / d2 + \"KMGTPE\" [i];\n    }\n  }\n  return n;\n}\n\n/** Format numbers with commas - From: http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript */\nfunction formatNumber(x) {\n  var parts = x.toString().split(\".\");\n  parts[0] = parts[0].replace(/\\B(?=(\\d{3})+(?!\\d))/g, \",\");\n  return parts.join(\".\");\n}\n\n/**  Get style  */\nfunction getStyle(oElm, strCssRule) {\n  var strValue = \"\";\n  if (document.defaultView && document.defaultView.getComputedStyle) {\n    strValue = document.defaultView.getComputedStyle(oElm, \"\").getPropertyValue(strCssRule);\n  } else if (oElm.currentStyle) {\n    strCssRule = strCssRule.replace(/\\-(\\w)/g, function(strMatch, p1) {\n      return p1.toUpperCase();\n    });\n    strValue = oElm.currentStyle[strCssRule];\n  }\n  return strValue;\n}\n\n/**  Create Element NS Ready  */\nfunction onCreateElementNsReady(func) {\n  if (document.createElementNS !== undefined) {\n    func();\n  } else {\n    setTimeout(function() {\n      onCreateElementNsReady(func);\n    }, 100);\n  }\n}\n\n/**  Get IE version  */\n// ----------------------------------------------------------\n// A short snippet for detecting versions of IE in JavaScript\n// without resorting to user-agent sniffing\n// ----------------------------------------------------------\n// If you're not in IE (or IE version is less than 5) then:\n// ie === undefined\n// If you're in IE (>=5) then you can determine which version:\n// ie === 7; // IE7\n// Thus, to detect IE:\n// if (ie) {}\n// And to detect the version:\n// ie === 6 // IE6\n// ie > 7 // IE8, IE9 ...\n// ie < 9 // Anything less than IE9\n// ----------------------------------------------------------\n// UPDATE: Now using Live NodeList idea from @jdalton\nvar ie = (function() {\n\n  var undef,\n    v = 3,\n    div = document.createElement('div'),\n    all = div.getElementsByTagName('i');\n\n  while (\n    div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',\n    all[0]\n  );\n  return v > 4 ? v : undef;\n}());\n\n// extend target object with second object\nfunction extend(out) {\n  out = out || {};\n\n  for (var i = 1; i < arguments.length; i++) {\n    if (!arguments[i])\n      continue;\n\n    for (var key in arguments[i]) {\n      if (arguments[i].hasOwnProperty(key))\n        out[key] = arguments[i][key];\n    }\n  }\n\n  return out;\n};\n"
+
+/***/ },
+/* 306 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(8);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(166);
+
+	var _actions = __webpack_require__(263);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var DeviceForm = function (_Component) {
+	    _inherits(DeviceForm, _Component);
+
+	    function DeviceForm(props) {
+	        _classCallCheck(this, DeviceForm);
+
+	        var _this = _possibleConstructorReturn(this, (DeviceForm.__proto__ || Object.getPrototypeOf(DeviceForm)).call(this, props));
+
+	        _this.createDevice = function (e) {
+	            e.preventDefault();
+	            var dispatch = _this.props.dispatch;
+	            var _this$refs = _this.refs,
+	                newName = _this$refs.newName,
+	                newType = _this$refs.newType;
+
+	            if (!newName.value) {
+	                _this.setState({ error: true });
+	                return;
+	            }
+	            _this.setState({ error: false });
+	            _this.setState({});
+	            var device = {
+	                name: newName.value,
+	                type: newType.value,
+	                value: 0
+	            };
+	            _this.refs.newName.value = '';
+	            _this.refs.newType.value = 'default';
+	            dispatch((0, _actions.startAddDevice)(device));
+	            _this.props.doAlert('New device added!');
+	        };
+
+	        _this.state = { error: false };
+	        return _this;
+	    }
+
+	    _createClass(DeviceForm, [{
+	        key: 'render',
+	        value: function render() {
+
+	            return _react2.default.createElement(
+	                'div',
+	                { className: 'device-panel' },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'device-panel-contents' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'device-panel-header' },
+	                        _react2.default.createElement('i', { className: 'fi-laptop' }),
+	                        _react2.default.createElement(
+	                            'h6',
+	                            null,
+	                            'New Device'
+	                        ),
+	                        _react2.default.createElement(
+	                            'form',
+	                            { onSubmit: this.createDevice },
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'row' },
+	                                _react2.default.createElement(
+	                                    'small',
+	                                    { hidden: !this.state.error, style: { color: 'red' } },
+	                                    'A name is required'
+	                                ),
+	                                _react2.default.createElement('input', { type: 'text', ref: 'newName', placeholder: 'New device name' })
+	                            ),
+	                            _react2.default.createElement(
+	                                'div',
+	                                { className: 'row' },
+	                                _react2.default.createElement(
+	                                    'select',
+	                                    { ref: 'newType' },
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'default' },
+	                                        'Select type'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'temperature' },
+	                                        'Temperature'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'airquality' },
+	                                        'Air quality'
+	                                    ),
+	                                    _react2.default.createElement(
+	                                        'option',
+	                                        { value: 'humidity' },
+	                                        'Humidity'
+	                                    )
+	                                )
+	                            ),
+	                            _react2.default.createElement(
+	                                'a',
+	                                { style: { float: 'right' }, className: 'button', onClick: this.createDevice },
+	                                'Create'
+	                            )
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return DeviceForm;
+	}(_react.Component);
+
+	exports.default = (0, _reactRedux.connect)(function (s) {
+	    return s;
+	})(DeviceForm);
 
 /***/ }
 /******/ ]);

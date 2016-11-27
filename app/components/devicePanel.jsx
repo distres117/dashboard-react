@@ -1,21 +1,27 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {startRemoveDevice} from 'actions';
 import {Link} from 'react-router';
 
 class DevicePanel extends Component{
 
     deleteDevice = ()=>{
-        alert('delete device!');
+        let {id,dispatch, doAlert, name} = this.props;
+        dispatch(startRemoveDevice(id));
+        doAlert(`${name} has been removed...`);
+
     }
     getValue(){
-        let value = this.props.value;
+        let {value,type} = this.props;
+        let style={color: 'orange'};
         if (this.props.type === 'temperature'){
-            let style={color: 'orange'};
             if (value > 90)
                 style.color = 'red';
             return (
                 <h1 style={style} className='device-content-value'>{value}&#8457;</h1>
             )
+        }else{
+            return (<h1 style={style} className='device-content-value'>{value}</h1>);
         }
     }
 

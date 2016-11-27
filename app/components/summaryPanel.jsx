@@ -23,7 +23,7 @@ class SummaryPanel extends Component {
                 relativeGaugeSize: false,
                 height: 120,
                 width: 150,
-                value: value / this.devices.length,
+                value: value / this.devices.length || 0,
                 min: 0,
                 max: 100,
                 title: this.props.title
@@ -38,7 +38,7 @@ class SummaryPanel extends Component {
         }
         return (
             <div className='summary-panel'>
-                <span className={style}>{this.devices.length}devices reporting</span>
+                <span className={style}>{this.devices.length} devices reporting</span>
                 <div id={this.props.type}></div>
             </div>
             
