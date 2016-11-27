@@ -10,20 +10,20 @@ class DeviceForm extends Component{
     createDevice = (e)=>{
         e.preventDefault();
         let {dispatch} = this.props;
-        let {newName, newType} = this.refs;
-        if (!newName.value){
+        let {newName, newType, newValue} = this.refs;
+        if (!newName.value || !newType.value || !newValue.value ){
             this.setState({error: true});
             return;
         }
         this.setState({error:false});
-        this.setState({})
         let device = {
             name:newName.value,
             type:newType.value,
-            value:0
+            value:newValue.value
         }
         this.refs.newName.value = '';
         this.refs.newType.value = 'default';
+        this.refs.newValue.value = '';
         dispatch(startAddDevice(device));
         this.props.doAlert('New device added!');
             
@@ -35,9 +35,9 @@ class DeviceForm extends Component{
                 <div className='device-panel-contents'>
                     <div className='device-panel-header'>
                             <i className='fi-laptop'></i><h6>New Device</h6>
-                        <form onSubmit={this.createDevice}>
+                        <form>
+                            <small hidden={!this.state.error} style={{color:'red'}} >All fields are required</small>
                             <div className='row'>
-                            <small hidden={!this.state.error} style={{color:'red'}} >A name is required</small>
                                 <input type='text' ref='newName' placeholder='New device name'/>
                                 
                             </div>
@@ -49,7 +49,10 @@ class DeviceForm extends Component{
                                     <option value='humidity'>Humidity</option>
                                 </select>
                             </div>
-                            <a style={{float:'right'}} className='button' onClick={this.createDevice}>Create</a>
+                            <div>
+                                <input type='text' ref='newValue' style={{float:'left', width:'150px', display:'inline-block'}} placeholder='Enter a value...'/>
+                            </div>
+                            <a className='button' onClick={this.createDevice}>Create</a>
                         </form>
                     </div>  
                 </div>
