@@ -11,7 +11,7 @@ class DeviceForm extends Component{
         e.preventDefault();
         let {dispatch} = this.props;
         let {newName, newType, newValue} = this.refs;
-        if (!newName.value || !newType.value || !newValue.value ){
+        if (!newName.value || newType.value === 'default' || !newValue.value ){
             this.setState({error: true});
             return;
         }

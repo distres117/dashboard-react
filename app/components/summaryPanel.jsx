@@ -21,7 +21,7 @@ class SummaryPanel extends Component {
             this.g = new JustGage({
             id: this.props.type,
             relativeGaugeSize: false,
-            height: 120,
+            height: 100,
             width: 150,
             value: Math.round(value / this.devices.length) || 0,
             min: 0,
@@ -31,6 +31,7 @@ class SummaryPanel extends Component {
     }
     render() {
         this.devices = this.props.devices.filter(d => d.type === this.props.type);
+        let sorted = this.devices.map(d=>parseInt(d.value)).sort((a,b)=> a-b);
         let style = 'label alert';
         if (this.devices.length) {
             style = 'label success';
@@ -39,7 +40,9 @@ class SummaryPanel extends Component {
             <div className='summary-panel'>
                 <span className={style}>{this.devices.length} devices reporting</span>
                 <div id={this.props.type}></div>
+                <small className='min-max'>min {sorted[0] || 0} / {sorted[sorted.length-1] || 0} max</small>
             </div>
+            
             
         );
     }
