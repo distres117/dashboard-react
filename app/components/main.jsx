@@ -12,8 +12,10 @@ class Main extends Component {
         this.state = {alerted:false, msg:'', color: 'green'};
     }
     showAlert = (msg)=>{
-        this.setState({alerted:true, msg:msg});
-        window.setTimeout(()=>this.setState({alerted:false}), 5000);
+        let elem = $('.info-alert');
+        this.setState({msg:msg});
+        elem.fadeIn('fast');
+        window.setTimeout(()=>elem.fadeOut('fast'), 5000);
     }
     componentWillUpdate() {
         this.loaded = true;
@@ -43,7 +45,7 @@ class Main extends Component {
             <div className="wrapper">
                 <Common></Common>
                 <div className='device-view'>
-                <div className='info-alert' ref='alertBox' hidden={!this.state.alerted}>{this.state.msg}</div>
+                <div className='info-alert' ref='alertBox' hidden='true'>{this.state.msg}</div>
                     <DeviceForm  doAlert={this.showAlert}/>
                     {this.getDevices()}
                 </div>

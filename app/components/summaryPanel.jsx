@@ -21,7 +21,7 @@ class SummaryPanel extends Component {
             this.g = new JustGage({
             id: this.props.type,
             relativeGaugeSize: false,
-            height: 100,
+            height: 110,
             width: 150,
             value: Math.round(value / this.devices.length) || 0,
             min: 0,

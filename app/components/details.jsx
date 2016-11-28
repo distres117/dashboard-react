@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Common from 'common';
-import {startGetAllDevices} from 'actions';
+import ChartPane from 'chartPane';
+import ReadingsPane from 'readingsPane';
+import {startGetAllDevices, startGetReadings} from 'actions';
 
 class Details extends Component{
     constructor(props){
         super(props);
         this.loaded = this.props.devices.length ? true : false;
+        this.props.dispatch(startGetReadings(this.props.params.id));
     }
     componentWillUpdate(){
         this.loaded = true;
@@ -15,6 +18,7 @@ class Details extends Component{
     componentWillMount() {
         if (!this.props.devices.length)
             this.props.dispatch(startGetAllDevices());
+        
     }
 
     getDetails(){
@@ -37,7 +41,8 @@ class Details extends Component{
             <div className="wrapper">
                 <Common></Common>
                 <div className='details-view'>
-                    {this.getDetails()}
+                    <ChartPane/>
+                    <ReadingsPane/>
                 </div>
             </div>
         )

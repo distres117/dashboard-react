@@ -7,8 +7,11 @@ class DevicePanel extends Component{
 
     deleteDevice = ()=>{
         let {id,dispatch, doAlert, name} = this.props;
-        dispatch(startRemoveDevice(id));
-        doAlert(`${name} has been removed...`);
+        dispatch(startRemoveDevice(id))
+        .then(()=>{
+            doAlert(`${name} has been removed...`);
+        });
+        
 
     }
     getValue(){

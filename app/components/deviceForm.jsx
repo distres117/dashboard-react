@@ -24,8 +24,11 @@ class DeviceForm extends Component{
         this.refs.newName.value = '';
         this.refs.newType.value = 'default';
         this.refs.newValue.value = '';
-        dispatch(startAddDevice(device));
-        this.props.doAlert('New device added!');
+        dispatch(startAddDevice(device))
+        .then(()=>{
+            this.props.doAlert('New device added!');
+        });
+        
             
     }
     render(){
