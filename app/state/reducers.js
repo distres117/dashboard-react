@@ -6,7 +6,7 @@ export const deviceReducer = (state=[], action)=>{
         case ADD_DEVICE:
             return [action.payload, ...state];
         case ADD_DEVICES:
-            return [...state, ...action.payload];
+            return [...action.payload];
         case REMOVE_DEVICE:
             return state.filter(d=>d.id !== action.payload);
         default:
@@ -19,7 +19,7 @@ export const readingsReducer = (state=[], action)=>{
         case ADD_READING:
             return [...state, action.payload.reading];
         case ADD_READINGS:
-            return [...state, ...action.payload.readings ];
+            return [...action.payload.readings];
         default:
             return state;
     }

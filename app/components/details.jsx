@@ -8,25 +8,35 @@ import {startGetAllDevices, startGetReadings} from 'actions';
 class Details extends Component{
     constructor(props){
         super(props);
-        this.loaded = this.props.devices.length ? true : false;
-        this.props.dispatch(startGetReadings(this.props.params.id));
+        this.loaded = false;
+        
     }
     componentWillUpdate(){
+        this.loaded = true;
+    }
+    componentDidMount(){
         this.loaded = true;
     }
 
     componentWillMount() {
         if (!this.props.devices.length)
             this.props.dispatch(startGetAllDevices());
-        
+        if (!this.props.readings.length){
+            let param = this.props.params.id;
+            this.props.dispatch(startGetReadings(param));
+        }      
     }
+
 
     getDetails(){
         if (this.loaded){
             let param = this.props.params.id;
             let device = this.props.devices.filter(d=>d.id === param)[0];
             return (
-                <h4>Here are the details for device {device.name}</h4>
+                <div>
+                    <ChartPane device={device} deviceReadings={this.props.readings}/>
+                    <ReadingsPane device={device}/>
+                </div>
             )
         }else{
             return (
@@ -41,8 +51,7 @@ class Details extends Component{
             <div className="wrapper">
                 <Common></Common>
                 <div className='details-view'>
-                    <ChartPane/>
-                    <ReadingsPane/>
+                    {this.getDetails()}
                 </div>
             </div>
         )

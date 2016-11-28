@@ -88,7 +88,7 @@ export const addReading = (deviceId, reading)=>{
 
 export const addReadings = (deviceId, readings)=>{
     return {
-        type: ADD_READING,
+        type: ADD_READINGS,
         payload:{
             deviceId,
             readings
