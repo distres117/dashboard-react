@@ -51,6 +51,9 @@ class Details extends Component{
                 <Common></Common>
                 <div className='details-view'>
                     {this.getDetails()}
+                    <div className='default-msg'>
+                        <h4>No datapoint has been selected...</h4>
+                    </div>
                 </div>
             </div>
         )

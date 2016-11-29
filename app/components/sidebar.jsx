@@ -23,7 +23,7 @@ class Sidebar extends Component {
             <div>
                 <div className='sidebar'>
                     <br />
-                    <h4>Devices</h4>
+                    <Link to={'/'}><h4>Devices</h4></Link>
                     <ul className="side-nav">{devices}</ul>
 
                 </div>

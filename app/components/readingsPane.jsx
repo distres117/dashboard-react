@@ -7,8 +7,8 @@ class ReadingsPane extends Component {
         super(props);
     }
     getRows() {
-        if (this.props.selectedReadings) {
-            let formatString = 'dddd, mmmm dS, yyyy, h:MM TT';
+        if (this.props.selectedReadings.length) {
+            let formatString = 'mm/dd/yy, h:MM TT';
             return this.props.selectedReadings.map(r => {
                 return (
                     <tr key={r.id}>
@@ -20,12 +20,13 @@ class ReadingsPane extends Component {
                 )
             });
         }
+        return (<tr></tr>);
     }
     render() {
         let {selectedReadings, title} = this.props;
         return (
             <div className='readings-pane'>
-                <h6>Readings from: {title}</h6>
+                <h6>{title}</h6>
                 <table>
                     <thead>
                         <tr>

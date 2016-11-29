@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 const LineChart = require('react-chartjs').Line;
 import ReadingsPane from 'readingsPane';
+import ReadingsForm from 'readingsForm';
 const dateFormat = require('dateformat');
 
 class ChartPane extends Component {
@@ -13,13 +14,17 @@ class ChartPane extends Component {
         let chart = this.refs.chart.getChart();
         let label = parseInt(chart.getPointsAtEvent(e)[0].label);
         $('.readings-pane').show();
+        let formatString = 'dddd, mmmm dS, yyyy, h:MM TT';
         let group = this.groups[label].sort((a,b)=>Date.parse(a.createdAt) - Date.parse(b.createdAt));
-        let range = `${dateFormat(group[0].createdAt, 'dddd, mmmm dS, yyyy, h:MM TT')} to ${dateFormat(group[group.length -1].createdAt, 'dddd, mmmm dS, yyyy, h:MM TT')}`;
-        this.setState({selectedReadings:group, title:range});
+        let range = `${dateFormat(group[0].createdAt, formatString )} to ${dateFormat(group[group.length -1].createdAt, formatString)}`;
+        this.setState({selectedReadings:group, title: `${group.length} Readings from: ${range}`});
     }
+    // componentDidUnmount(){
+    //     this.setState({selectedReadings:[]});
+    // }
 
     makeData(readings) {
-        if (readings.length) {
+        if (readings && readings.length >= 30) {
             //split into 30 groups
             let groupSize = Math.floor(readings.length / 30);
             //calculate average of each group
@@ -47,7 +52,7 @@ class ChartPane extends Component {
                 labels: labels,
                 datasets: [
                     {
-                        label: "My Second dataset",
+                        label: "",
                         fillColor: "rgba(76, 163, 214,.1)",
                         strokeColor: "rgba(76, 163, 214,1)",
                         highlightFill: "rgba(151,187,205,0)",
@@ -68,11 +73,15 @@ class ChartPane extends Component {
                     <div className='chart-subtitle'>
                         <i>Click on a datapoint to view raw data...</i>
                     </div>
+                    <ReadingsForm device={this.props.device}/>
                 </div>
             )
         } else {
             return (
-                <div></div>
+                <div>
+                    <h4>Not enough readings for this device to visualize...</h4>
+                    <ReadingsForm device={this.props.device}/>
+                </div>
             )
         }
     }

@@ -2,4 +2,10 @@
     position: fixed;
     left:22%;
     top:170px;
+    .default-msg{
+            z-index: -1;
+        position: fixed;
+        top: 60%;
+        left: 50%;
+    }
 }
