@@ -3,8 +3,8 @@
     padding: 10px;
     height: 400px;
     overflow: scroll;
-    top: 330px;
-    position: relative;
+    margin-top: 330px;
+    position: fixed;
     width: 70%;
     margin-left: -40px;
     table tbody, table tfoot, table thead {
@@ -12,5 +12,8 @@
         background-color: #fefefe;
         font-size: small;
         line-height: 12px;
+    }
+    h6{
+        font-weight: bold;
     }
 }

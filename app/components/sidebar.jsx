@@ -9,6 +9,7 @@ class Sidebar extends Component {
     }
     loadReadings(id){
         this.props.dispatch(startGetReadings(id));
+        $('.readings-pane').hide(); //jquery hack...
     }
     render() {
         let devices = this.props.devices.map(d => {

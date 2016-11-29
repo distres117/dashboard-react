@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 const LineChart = require('react-chartjs').Line;
 import ReadingsPane from 'readingsPane';
+const dateFormat = require('dateformat');
 
 class ChartPane extends Component {
     constructor(props) {
@@ -11,7 +12,10 @@ class ChartPane extends Component {
     getDataPoint = (e) => {
         let chart = this.refs.chart.getChart();
         let label = parseInt(chart.getPointsAtEvent(e)[0].label);
-        this.setState({selectedReadings:this.groups[label]});
+        $('.readings-pane').show();
+        let group = this.groups[label].sort((a,b)=>Date.parse(a.createdAt) - Date.parse(b.createdAt));
+        let range = `${dateFormat(group[0].createdAt, 'dddd, mmmm dS, yyyy, h:MM TT')} to ${dateFormat(group[group.length -1].createdAt, 'dddd, mmmm dS, yyyy, h:MM TT')}`;
+        this.setState({selectedReadings:group, title:range});
     }
 
     makeData(readings) {
@@ -62,7 +66,7 @@ class ChartPane extends Component {
                     <span>{'Average ' + device.type + ' values'} </span>
                     <LineChart ref='chart' onClick={this.getDataPoint} data={data} options={options} height='200' width='1300' />
                     <div className='chart-subtitle'>
-                        <small>Click on a datapoint to view raw data...</small>
+                        <i>Click on a datapoint to view raw data...</i>
                     </div>
                 </div>
             )
@@ -74,14 +78,16 @@ class ChartPane extends Component {
     }
     render() {
         let readings = this.props.deviceReadings;
+        let {selectedReadings, title} = this.state;
         return (
             <div>
                 <div className='chart-pane'>
                     {this.makeData(readings)}
                 </div>
-                <div hidden={!this.state.selectedReadings.length}>
-                    <ReadingsPane selectedReadings={this.state.selectedReadings} />
+                <div hidden={!selectedReadings || !selectedReadings.length}>
+                    <ReadingsPane selectedReadings={selectedReadings} title={title} />
                 </div>
+               
             </div>
         )
     }
