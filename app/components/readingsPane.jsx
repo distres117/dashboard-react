@@ -6,8 +6,8 @@ class ReadingsPane extends Component {
         super(props);
     }
     getRows() {
-        let {readings} = this.props;
-        return readings.map(r => {
+        if (this.props.selectedReadings){
+        return this.props.selectedReadings.map(r => {
             return (
                 <tr key={r.id}>
                     <td>{r.type}</td>
@@ -17,6 +17,7 @@ class ReadingsPane extends Component {
                 </tr>
             )
         });
+        }
     }
     render() {
         return (

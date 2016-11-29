@@ -29437,8 +29437,7 @@
 	                        v: _react2.default.createElement(
 	                            'div',
 	                            null,
-	                            _react2.default.createElement(_chartPane2.default, { device: device, deviceReadings: _this2.props.readings }),
-	                            _react2.default.createElement(_readingsPane2.default, { device: device })
+	                            _react2.default.createElement(_chartPane2.default, { device: device, deviceReadings: _this2.props.readings })
 	                        )
 	                    };
 	                }();
@@ -29493,6 +29492,10 @@
 
 	var _reactRedux = __webpack_require__(166);
 
+	var _readingsPane = __webpack_require__(300);
+
+	var _readingsPane2 = _interopRequireDefault(_readingsPane);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29509,33 +29512,43 @@
 	    function ChartPane(props) {
 	        _classCallCheck(this, ChartPane);
 
-	        return _possibleConstructorReturn(this, (ChartPane.__proto__ || Object.getPrototypeOf(ChartPane)).call(this, props));
+	        var _this = _possibleConstructorReturn(this, (ChartPane.__proto__ || Object.getPrototypeOf(ChartPane)).call(this, props));
+
+	        _this.getDataPoint = function (e) {
+	            var chart = _this.refs.chart.getChart();
+	            var label = parseInt(chart.getPointsAtEvent(e)[0].label);
+	            _this.setState({ selectedReadings: _this.groups[label] });
+	        };
+
+	        _this.state = { selectedReadings: [] };
+	        return _this;
 	    }
 
 	    _createClass(ChartPane, [{
-	        key: 'getDataPoint',
-	        value: function getDataPoint(e) {
-	            console.log(e.target);
-	        }
-	    }, {
 	        key: 'makeData',
 	        value: function makeData(readings) {
 	            if (readings.length) {
 	                //split into 30 groups
 	                var groupSize = Math.floor(readings.length / 30);
 	                //calculate average of each group
+	                this.groups = [];
 	                var dataPoints = [];
 	                for (var i = 0; i < readings.length; i += groupSize) {
 	                    var j = i;
+	                    var _group = [];
 	                    var group = [];
 	                    while (j < i + groupSize) {
 	                        var reading = readings[j];
-	                        if (reading !== undefined) group.push(parseInt(reading.value));
+	                        if (reading !== undefined) {
+	                            _group.push(reading);
+	                            group.push(parseInt(reading.value));
+	                        }
 	                        j++;
 	                    }
 	                    var avg = Math.round(group.reduce(function (ac, n) {
 	                        return ac += n;
 	                    }, 0) / group.length);
+	                    this.groups.push(_group);
 	                    dataPoints.push(avg);
 	                }
 	                var device = this.props.device;
@@ -29572,7 +29585,7 @@
 	                        'Average ' + device.type + ' values',
 	                        ' '
 	                    ),
-	                    _react2.default.createElement(LineChart, { onClick: this.getDataPoint, data: data, options: options, height: '200', width: '1300' }),
+	                    _react2.default.createElement(LineChart, { ref: 'chart', onClick: this.getDataPoint, data: data, options: options, height: '200', width: '1300' }),
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'chart-subtitle' },
@@ -29593,8 +29606,17 @@
 	            var readings = this.props.deviceReadings;
 	            return _react2.default.createElement(
 	                'div',
-	                { className: 'chart-pane' },
-	                this.makeData(readings)
+	                null,
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'chart-pane' },
+	                    this.makeData(readings)
+	                ),
+	                _react2.default.createElement(
+	                    'div',
+	                    { hidden: !this.state.selectedReadings.length },
+	                    _react2.default.createElement(_readingsPane2.default, { selectedReadings: this.state.selectedReadings })
+	                )
 	            );
 	        }
 	    }]);
@@ -33617,34 +33639,34 @@
 	    _createClass(ReadingsPane, [{
 	        key: 'getRows',
 	        value: function getRows() {
-	            var readings = this.props.readings;
-
-	            return readings.map(function (r) {
-	                return _react2.default.createElement(
-	                    'tr',
-	                    { key: r.id },
-	                    _react2.default.createElement(
-	                        'td',
-	                        null,
-	                        r.type
-	                    ),
-	                    _react2.default.createElement(
-	                        'td',
-	                        null,
-	                        r.createdAt
-	                    ),
-	                    _react2.default.createElement(
-	                        'td',
-	                        null,
-	                        r.updatedAt
-	                    ),
-	                    _react2.default.createElement(
-	                        'td',
-	                        null,
-	                        r.value
-	                    )
-	                );
-	            });
+	            if (this.props.selectedReadings) {
+	                return this.props.selectedReadings.map(function (r) {
+	                    return _react2.default.createElement(
+	                        'tr',
+	                        { key: r.id },
+	                        _react2.default.createElement(
+	                            'td',
+	                            null,
+	                            r.type
+	                        ),
+	                        _react2.default.createElement(
+	                            'td',
+	                            null,
+	                            r.createdAt
+	                        ),
+	                        _react2.default.createElement(
+	                            'td',
+	                            null,
+	                            r.updatedAt
+	                        ),
+	                        _react2.default.createElement(
+	                            'td',
+	                            null,
+	                            r.value
+	                        )
+	                    );
+	                });
+	            }
 	        }
 	    }, {
 	        key: 'render',

@@ -35,7 +35,6 @@ class Details extends Component{
             return (
                 <div>
                     <ChartPane device={device} deviceReadings={this.props.readings}/>
-                    <ReadingsPane device={device}/>
                 </div>
             )
         }else{
