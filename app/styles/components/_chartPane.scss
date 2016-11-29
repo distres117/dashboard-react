@@ -2,8 +2,19 @@
     background: white;
     left: 20%;
     width: 70%;
-    top: 200px;
+    top: 180px;
     box-shadow: 2px 2px lightgray;
     position: fixed;
-    padding: 10px
+    padding: 10px;
+    color:grey;
+    h5{
+        position: inline-block;
+        float:left;
+    }
+    span{
+        float:right;
+    }
+    .chart-subtitle{
+        text-align: center;
+    }
 }
