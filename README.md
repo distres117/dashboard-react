@@ -30,3 +30,7 @@ In no particular order...
 * Mocha/chai (tests)
 * Chart.js
 * Justgage
+
+###Notes
+* Chrome is the suggested browser for this application
+* The application is best viewed on a high-resolution, widescreen display
