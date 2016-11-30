@@ -19,9 +19,6 @@ class ChartPane extends Component {
         let range = `${dateFormat(group[0].createdAt, formatString )} to ${dateFormat(group[group.length -1].createdAt, formatString)}`;
         this.setState({selectedReadings:group, title: `${group.length} Readings from: ${range}`});
     }
-    // componentDidUnmount(){
-    //     this.setState({selectedReadings:[]});
-    // }
 
     makeData(readings) {
         if (readings && readings.length >= 30) {
@@ -67,9 +64,9 @@ class ChartPane extends Component {
             };
             return (
                 <div>
-                    <h5><i className='fi-laptop'></i> {device.id}</h5>
+                    <h5><i className='fi-laptop'></i> {device.name}</h5>
                     <span>{'Average ' + device.type + ' values'} </span>
-                    <LineChart ref='chart' onClick={this.getDataPoint} data={data} options={options} height='200' width='1300' />
+                    <LineChart ref='chart' onClick={this.getDataPoint} data={data} options={options} height='170' width='1300' />
                     <div className='chart-subtitle'>
                         <i>Click on a datapoint to view raw data...</i>
                     </div>
@@ -79,8 +76,10 @@ class ChartPane extends Component {
         } else {
             return (
                 <div>
+                    <h5><i className='fi-laptop'></i> {this.props.device.name}</h5><br/><br/>
                     <h4>Not enough readings for this device to visualize...</h4>
                     <ReadingsForm device={this.props.device}/>
+                    <ReadingsPane offset='40px' selectedReadings={this.props.deviceReadings} />
                 </div>
             )
         }
@@ -94,7 +93,7 @@ class ChartPane extends Component {
                     {this.makeData(readings)}
                 </div>
                 <div hidden={!selectedReadings || !selectedReadings.length}>
-                    <ReadingsPane selectedReadings={selectedReadings} title={title} />
+                    <ReadingsPane offset='370px' selectedReadings={selectedReadings} title={title} />
                 </div>
                
             </div>

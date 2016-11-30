@@ -23,9 +23,9 @@ class ReadingsPane extends Component {
         return (<tr></tr>);
     }
     render() {
-        let {selectedReadings, title} = this.props;
+        let {selectedReadings, title, offset} = this.props;
         return (
-            <div className='readings-pane'>
+            <div className='readings-pane' style={{marginTop:offset}}>
                 <h6>{title}</h6>
                 <table>
                     <thead>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {startRemoveDevice} from 'actions';
+import {startRemoveDevice, startGetReadings} from 'actions';
 import {Link} from 'react-router';
 
 class DevicePanel extends Component{
@@ -13,6 +13,10 @@ class DevicePanel extends Component{
         });
         
 
+    }
+    handleClick = ()=>{
+        let {id,dispatch} = this.props;
+        dispatch(startGetReadings(id));
     }
     getValue(){
         let {value,type} = this.props;
@@ -45,7 +49,7 @@ class DevicePanel extends Component{
                 </div>
                 <div>
                     <a onClick={this.deleteDevice} style={{paddingRight:'10px', color:'red', float:'right'}}>Delete</a>
-                    <Link style={{float:'left'}} to={`details/${id}`} >More...</Link>
+                    <Link onClick={this.handleClick} style={{float:'left'}} to={`details/${id}`} >More...</Link>
                 </div>
             </div>
         )
