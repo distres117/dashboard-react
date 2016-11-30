@@ -21900,7 +21900,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var client = _axios2.default.create({ baseURL: 'http://cors-anywhere.herokuapp.com/https://fullstack-challenge-api.herokuapp.com' });
+	var client = _axios2.default.create({ baseURL: 'https://cors-anywhere.herokuapp.com/https://fullstack-challenge-api.herokuapp.com' });
 
 	//******************************** DEVICE ACTIONS *************************************
 	var startGetAllDevices = exports.startGetAllDevices = function startGetAllDevices() {
