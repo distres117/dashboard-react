@@ -10,7 +10,7 @@ import {reducers} from 'reducers';
 import {startGetAllDevices} from 'actions';
 import {Route, Router, IndexRoute, hashHistory} from 'react-router';
 
-require('style!css!foundation-sites/dist/foundation.min.css');
+require('style!css!foundation-sites/dist/css/foundation.min.css');
 require('style!css!foundationIcons');
 require('style!css!sass!applicationStyles');
 require('script!raphael/raphael.min.js');
