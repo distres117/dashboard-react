@@ -17,8 +17,7 @@ require('script!raphael/raphael.min.js');
 require('script!justgage/justgage.js');
 $(document).foundation();
 
-const store = redux.createStore(reducers, {}, 
-        redux.compose(redux.applyMiddleware(thunk), window.devToolsExtension()));
+const store = redux.createStore(reducers, {}, redux.compose(redux.applyMiddleware(thunk)));
 
 ReactDOM.render(
     <Provider store={store}>

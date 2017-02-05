@@ -141,7 +141,7 @@
 	__webpack_require__(319);
 	$(document).foundation();
 
-	var store = redux.createStore(_reducers.reducers, {}, redux.compose(redux.applyMiddleware(_reduxThunk2.default), window.devToolsExtension()));
+	var store = redux.createStore(_reducers.reducers, {}, redux.compose(redux.applyMiddleware(_reduxThunk2.default)));
 
 	_reactDom2.default.render(_react2.default.createElement(
 	    _reactRedux.Provider,
@@ -20872,8 +20872,7 @@
 	  if (value == null) {
 	    return value === undefined ? undefinedTag : nullTag;
 	  }
-	  value = Object(value);
-	  return (symToStringTag && symToStringTag in value)
+	  return (symToStringTag && symToStringTag in Object(value))
 	    ? getRawTag(value)
 	    : objectToString(value);
 	}
@@ -34151,8 +34150,8 @@
 	exports.__esModule = true;
 	function createThunkMiddleware(extraArgument) {
 	  return function (_ref) {
-	    var dispatch = _ref.dispatch;
-	    var getState = _ref.getState;
+	    var dispatch = _ref.dispatch,
+	        getState = _ref.getState;
 	    return function (next) {
 	      return function (action) {
 	        if (typeof action === 'function') {
