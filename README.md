@@ -4,7 +4,7 @@ The user can create and remove devices and also add readings to devices.  Readin
 A device's readings can be visualized as averaged values (there needs to be at least 30 readings to see this).  Clicking on a datapoint will drill into the raw data (each point is an aggregate of multiple readings).
 
 ###Demo site
-https://distres117.github.io/dashboard-react
+https://omcrobbie.github.io/dashboard-react
 
 ###Installation
 Clone this repo, go to folder and then...
